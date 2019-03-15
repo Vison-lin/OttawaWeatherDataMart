@@ -75,5 +75,7 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
                 file_name = file_name + "_" + str(name_ctr)
             name_ctr = name_ctr + 1
             output_data_from_list_to_new_csv_helper(file_name, sublist)
+    else:
+        output_data_from_list_to_new_csv_helper(file_name, list_to_store)
 
     print("Finished the writing!")
