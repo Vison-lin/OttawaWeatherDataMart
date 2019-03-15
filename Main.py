@@ -16,7 +16,7 @@ print("##### Start to processing Ontario_1_1.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_1_1.csv')
 
-output_data_from_list_to_new_csv("ontario_1_1_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_1_1_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
@@ -32,7 +32,7 @@ print("##### Start to processing Ontario_1_2.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_1_2.csv')
 
-output_data_from_list_to_new_csv("ontario_1_2_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_1_2_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
@@ -48,7 +48,7 @@ print("##### Start to processing Ontario_2_1.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_2_1.csv')
 
-output_data_from_list_to_new_csv("ontario_2_1_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_2_1_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
@@ -64,7 +64,7 @@ print("##### Start to processing Ontario_2_2.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_2_2.csv')
 
-output_data_from_list_to_new_csv("ontario_2_2_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_2_2_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
@@ -80,7 +80,7 @@ print("##### Start to processing Ontario_3.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_3.csv')
 
-output_data_from_list_to_new_csv("ontario_3_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_3_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
@@ -96,7 +96,7 @@ print("##### Start to processing Ontario_4.csv #####")
 
 valid_weather_list = read_ottawa_data_from_csv('ontario_4.csv')
 
-output_data_from_list_to_new_csv("ontario_4_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+output_data_from_list_to_new_csv("ontario_4_ottawa", valid_weather_list, num_of_rows_per_csv);
 
 valid_weather_list.clear()
 
