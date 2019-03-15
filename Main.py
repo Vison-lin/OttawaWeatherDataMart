@@ -1,3 +1,111 @@
-import csv
+import time
 
-a = csv.reader();
+from DataFilter import read_ottawa_data_from_csv, output_data_from_list_to_new_csv
+
+num_of_rows_per_csv = 100000
+
+start = time.time()
+
+#
+#
+#   Process for Ontario_1_1.csv
+#
+#
+
+print("##### Start to processing Ontario_1_1.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_1_1.csv')
+
+output_data_from_list_to_new_csv("ontario_1_1_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_1_1.csv #####")
+
+#
+#
+#   Process for Ontario_1_21.csv
+#
+#
+
+print("##### Start to processing Ontario_1_2.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_1_2.csv')
+
+output_data_from_list_to_new_csv("ontario_1_2_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_1_2.csv #####")
+
+#
+#
+#   Process for Ontario_2_1.csv
+#
+#
+
+print("##### Start to processing Ontario_2_1.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_2_1.csv')
+
+output_data_from_list_to_new_csv("ontario_2_1_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_2_1.csv #####")
+
+#
+#
+#   Process for Ontario_2_2csv
+#
+#
+
+print("##### Start to processing Ontario_2_2.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_2_2.csv')
+
+output_data_from_list_to_new_csv("ontario_2_2_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_2_2.csv #####")
+
+#
+#
+#   Process for Ontario_3.csv
+#
+#
+
+print("##### Start to processing Ontario_3.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_3.csv')
+
+output_data_from_list_to_new_csv("ontario_3_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_3.csv #####")
+
+#
+#
+#   Process for Ontario_4.csv
+#
+#
+
+print("##### Start to processing Ontario_4.csv #####")
+
+valid_weather_list = read_ottawa_data_from_csv('ontario_4.csv')
+
+output_data_from_list_to_new_csv("ontario_4_ottawa.csv'", valid_weather_list, num_of_rows_per_csv);
+
+valid_weather_list.clear()
+
+print("##### Finished the process for Ontario_4.csv #####")
+
+end = time.time()
+
+hours, rem = divmod(end-start, 3600)
+
+minutes, seconds = divmod(rem, 60)
+
+print("Total time consume is: "+"{:0>2}:{:0>2}:{:05.2f}".format(int(hours),int(minutes),seconds) + " :(")

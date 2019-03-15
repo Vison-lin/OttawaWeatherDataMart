@@ -41,19 +41,19 @@ def read_ottawa_data_from_csv(file_name):
 def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_file):
     """
     This method stores the given list_to_store into the file_name csv file. The file will be created if does not exist.
-    :param file_name: the name of the new file. Note that this file name is strongly suggest to end with .csv
+    :param file_name: the name of the new file. The file name SHOULD NOT CONTAINS .CSV which will be added automatically
     :param list_to_store: the list of content that needs to be stored into the csv file
     :param num_of_row_per_file: the number of row per file. A new file will be created and with sequence number attached to name after automatically.
     """
 
     def output_data_from_list_to_new_csv_helper(sub_file_name, sub_list_to_store):
-        with open(sub_file_name, 'w') as csvFile:
+        with open(sub_file_name+".csv", 'w', newline='') as csvFile:
             print("Prepare to write the data into the file: " + sub_file_name + ". It might takes a while...")
             writer = csv.writer(csvFile)
             writer.writerows(sub_list_to_store)
         csvFile.close()
 
-    if list_to_store.length > num_of_row_per_file:
+    if len(list_to_store) > num_of_row_per_file:
         print("Start dividing files...")
 
         def chunk():
@@ -64,15 +64,15 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
 
         for sublist in chunk():
             if name_ctr == 0:
-                print("start dividing first file")
+                print("start dividing the first sle")
             if name_ctr == 1:
-                print("start dividing second file")
+                print("start dividing the second file")
             if name_ctr == 2:
-                print("start dividing third file")
+                print("start dividing the third file")
             if name_ctr >2:
-                print("start dividing " + str(name_ctr + 1) + "th file")
+                print("start dividing the " + str(name_ctr + 1) + "th file")
             if name_ctr != 0:
-                file_name = file_name + str(name_ctr)
+                file_name = file_name + "_" + str(name_ctr)
             name_ctr = name_ctr + 1
             output_data_from_list_to_new_csv_helper(file_name, sublist)
 
