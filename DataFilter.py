@@ -3,6 +3,10 @@ import sys
 
 ottawaWeatherStationList = []  # global list for storing all the weather stations name that are in Ottawa
 
+total_record = 0
+
+total_valid_record = 0
+
 with open('Station Inventory EN.csv', 'r') as readStations:  # r represent read model
     print("Start to read the stations...")
     reader = csv.reader(readStations)
@@ -20,21 +24,27 @@ def read_ottawa_data_from_csv(file_name):
     Retrieve data about the ottawa's weather record from a csv file.
     :param file_name: the file to retrieve data
     """
+    global total_record
+    global total_valid_record
     result_list = []
     total_ctr = 0
     valid_ctr = 0
     with open(file_name, 'r') as readData:  # r represent read model
-        print("Start to read file: " + file_name + ". This may takes a while...")
+        print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readData)
         for row in file:
             total_ctr = total_ctr + 1
             sys.stdout.write("\r" + str(total_ctr) + " records have been processed!")
             sys.stdout.flush()
+            if "Year" in row[1] and "Month" in row[2]:
+                result_list.append(row)
             if "ONTARIO" in row[25]:  # if is Ontario's station
-                if any(row[24] in s for s in ottawaWeatherStationList):  # if is Ottawa's station
+                if row[24] in ottawaWeatherStationList:  # if is Ottawa's station
                     result_list.append(row)
                     valid_ctr = valid_ctr + 1
-    print("Finished loading data. Total of " + str(valid_ctr) + " data records retrieved!")
+    print("\nFinished loading data. Total of " + str(valid_ctr) + " data records retrieved!")
+    total_record = total_record + total_ctr
+    total_valid_record = total_valid_record + valid_ctr
     return result_list
 
 
@@ -48,7 +58,7 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
 
     def output_data_from_list_to_new_csv_helper(sub_file_name, sub_list_to_store):
         with open(sub_file_name+".csv", 'w', newline='') as csvFile:
-            print("Prepare to write the data into the file: " + sub_file_name + ". It might takes a while...")
+            print("Prepare to write the data into the file: " + sub_file_name + ". It might take a while...")
             writer = csv.writer(csvFile)
             writer.writerows(sub_list_to_store)
         csvFile.close()
@@ -72,9 +82,11 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
             if name_ctr >2:
                 print("start dividing the " + str(name_ctr + 1) + "th file")
             if name_ctr != 0:
-                file_name = file_name + "_" + str(name_ctr)
+                output_data_from_list_to_new_csv_helper(file_name + "_" + str(name_ctr), sublist)
+            else:
+                output_data_from_list_to_new_csv_helper(file_name, sublist)
             name_ctr = name_ctr + 1
-            output_data_from_list_to_new_csv_helper(file_name, sublist)
+
     else:
         output_data_from_list_to_new_csv_helper(file_name, list_to_store)
 
