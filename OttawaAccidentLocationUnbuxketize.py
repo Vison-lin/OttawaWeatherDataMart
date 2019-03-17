@@ -1,7 +1,9 @@
 import csv
+import math
 import sys
 
 from Location import Location
+from NeighborhoodLookupTable import generate_neighborhood_lookup_table
 
 
 def location_string_processor(file_name):
@@ -14,6 +16,7 @@ def location_string_processor(file_name):
     locations = []
     total_ctr = 0
     key_ctr = 0
+    neighborhoods = generate_neighborhood_lookup_table()
     with open(file_name, 'r') as readData:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readData)
@@ -72,7 +75,15 @@ def location_string_processor(file_name):
                 if int(float(location.latitude)) != 45 and int(float(location.latitude)) != 44:
                     raise Exception("Wrong latitude: " + row[4] + ", [" + location.latitude + "]")
                 locations.append(location)
-                location.neighborhood = "CURR:OTTAWA"
+
+                shortest_dist = float("inf")
+                for neighborhood in neighborhoods:
+                    difflong = float(location.longitude) - neighborhood.longitude
+                    difflati = float(location.latitude) - neighborhood.latitude
+                    distance = math.sqrt(pow(difflong, 2) + pow(difflati, 2))
+                    if distance < shortest_dist:
+                        shortest_dist = distance
+                        location.neighborhood = neighborhood.neighborhood
 
     return locations
 
