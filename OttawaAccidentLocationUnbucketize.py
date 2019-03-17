@@ -93,7 +93,6 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     This method stores the given list_to_store into the file_name csv file. The file will be created if does not exist.
     :param file_name: the name of the new file. The file name SHOULD NOT CONTAINS .CSV which will be added automatically
     :param list_to_store: the list of content that needs to be stored into the csv file
-    :param num_of_row_per_file: the number of row per file. A new file will be created and with sequence number attached to name after automatically.
     """
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
@@ -108,4 +107,4 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
 
 
 list = location_string_processor("2014collisionsfinal.xls.csv")
-output_data_from_list_to_new_csv("Hi", list)
+output_data_from_list_to_new_csv("2014ProcessedCollisionLocationList", list)
