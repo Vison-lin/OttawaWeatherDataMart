@@ -200,8 +200,6 @@ def copy_weather_data_season_same_method():
     a= 0
     for s in total_data:
         a += 1
-        if (a == 8):
-            break
         sys.stdout.write("\r" + str(a) + " records have been processed!")
         sys.stdout.flush()
 
@@ -219,8 +217,8 @@ def copy_weather_data_season_same_method():
             copy_weather_data_season_same.append(result)
             continue
 
-        if(result[23]==''):
-            result[23] = 'NA'
+        if(result[23]=='' or result[23]=='NA'):
+            result[23] = 'N/A'
         for index in range(5,23):
             if (index in noChange):
                 continue
@@ -236,20 +234,19 @@ def copy_weather_data_season_same_method():
 
                     if (s[1] != infor[1]):
                         continue
-                    # if currentMonth == 0:
-                    #     currentMonth = infor[2]
-                    # if int(infor[2]) not in currentSeason:
-                    #     if countSeason == 3:
-                    #         break
-                    #     else:
-                    #         continue
-                    # else:
-                    #     if (currentMonth != infor[2]):
-                    #         countSeason += 1
-                    #         currentMonth = infor[2]
-
+                    if currentMonth == 0:
+                        currentMonth = infor[2]
                     if int(infor[2]) not in currentSeason:
-                        continue
+                        if countSeason == 3:
+                            break
+                        else:
+                            continue
+                    else:
+                        if (currentMonth != infor[2]):
+                            countSeason += 1
+                            currentMonth = infor[2]
+
+
 
 
                     if (infor[index] == ''):
