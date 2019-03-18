@@ -14,7 +14,6 @@ def hour_string_processor(file_name):
     global total_record
     global total_valid_record
     times = []
-    key_ctr = 0
     with open(file_name, 'r') as readData:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readData)
@@ -33,8 +32,6 @@ def hour_string_processor(file_name):
                 day_of_week = date(int(year), int(month), int(day)).isoweekday()
                 hour.day_of_week = day_of_week
                 is_weekend = day_of_week == 6 or day_of_week == 7
-                hour.hour_key = key_ctr
-                key_ctr = key_ctr + 1
                 time_period = time.split(" ", 1)[1]
                 h = time.split(":", 1)[0]
                 if "AM" in time_period:
@@ -71,15 +68,16 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["HOUR_KEY", "HOUR_ID", "HOUR_START", "HOUR_END", "DATE",
+        writer.writerow(["HOUR_ID", "HOUR_START", "HOUR_END", "DATE",
                          "DAY_OF_WEEK", "DAY", "MONTH", "YEAR", "WEEKEND", "HOLIDAY", "HOLIDAY_NAME"])
         for hour in list_to_store:
-            writer.writerow([hour.hour_key, hour.hour_id, hour.hour_start, hour.hour_end, hour.date, hour.day_of_week,
+            writer.writerow([hour.hour_id, hour.hour_start, hour.hour_end, hour.date, hour.day_of_week,
                              hour.day, hour.month, hour.year, hour.weekend, hour.holiday, hour.holiday_name])
     csvFile.close()
 
     print("Finished the writing!")
 
 
-list = hour_string_processor("processed2014Collision.csv")
-output_data_from_list_to_new_csv("2014ProcessedCollisionHourList", list)
+def unbucketizeHourTable():
+    list = hour_string_processor("processed2014Collision.csv")
+    output_data_from_list_to_new_csv("2014ProcessedCollisionHourList", list)

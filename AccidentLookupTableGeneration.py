@@ -19,8 +19,8 @@ def accident_processor(collision_file_name, hour_file_name, location_file_name):
         print("Start to read file: " + hour_file_name + ". This may take a while...")
         file = csv.reader(readHour)
         for row in file:
-            if "HOUR_KEY" not in row[0]:
-                hour_id = row[1]
+            if "HOUR_ID" not in row[0]:
+                hour_id = row[0]
                 hours.append(hour_id)
     readHour.close()
 
@@ -30,8 +30,8 @@ def accident_processor(collision_file_name, hour_file_name, location_file_name):
         print("Start to read file: " + location_file_name + ". This may take a while...")
         file = csv.reader(readLocation)
         for row in file:
-            if "LOCATION_KEY" not in row[0]:
-                location_id = row[1]
+            if "LOCATION_ID" not in row[0]:
+                location_id = row[0]
                 locations.append(location_id)
     readLocation.close()
 

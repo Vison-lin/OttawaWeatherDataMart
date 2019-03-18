@@ -16,7 +16,6 @@ def location_string_processor(file_name):
     global total_valid_record
     locations = []
     total_ctr = 0
-    key_ctr = 0
     neighborhoods = generate_neighborhood_lookup_table()
     weather_stations = generate_weather_station_list()
     with open(file_name, 'r') as readData:  # r represent read model
@@ -68,8 +67,6 @@ def location_string_processor(file_name):
                         location.intersection_two = "N/A"
                     else:
                         raise Exception("Wrong format location address: " + location_str)
-                location.location_key = key_ctr
-                key_ctr = key_ctr + 1
                 location.longitude = row[2]
                 if ((int(float(location.longitude)) != -75) and (int(float(location.longitude)) != -76)):
                     raise Exception("Wrong longitude: [" + location.longitude + "], " + row[2])
@@ -106,10 +103,10 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["LOCATION_KEY", "LOCATION_ID", "STREET_NAME", "INTERSECTION_1", "INTERSECTION_2",
+        writer.writerow(["LOCATION_ID", "STREET_NAME", "INTERSECTION_1", "INTERSECTION_2",
                          "LONGITUDE", "LATITUDE", "NEIGHBORHOOD", "CLOSEST_WEATHER_STATION_NAME"])
         for location in list_to_store:
-            writer.writerow([location.location_key, location.location_id, location.street_name,
+            writer.writerow([location.location_id, location.street_name,
                              location.intersection_one, location.intersection_two, location.longitude,
                              location.latitude, location.neighborhood,
                              location.closest_weather_station])
@@ -118,5 +115,6 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     print("Finished the writing!")
 
 
-list = location_string_processor("processed2014Collision.csv")
-output_data_from_list_to_new_csv("2014ProcessedCollisionLocationList", list)
+def unbucketizeLocationTable():
+    list = location_string_processor("processed2014Collision.csv")
+    output_data_from_list_to_new_csv("2014ProcessedCollisionLocationList", list)

@@ -16,3 +16,5 @@ class Collision:
         self.no_of_pedestrians = 0
         self.location_id = ""
         self.hour_id = ""
+        self.location_key = ""
+        self.hour_key = ""
