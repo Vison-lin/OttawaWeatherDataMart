@@ -22,8 +22,8 @@ def hour_string_processor(file_name):
         for row in file:
             if "COLLISION_ID" not in row[0]:
                 hour = Hour()
-                readDate = row[6]
-                time = row[7]
+                readDate = row[4]
+                time = row[5]
                 splited_date = readDate.split("-", 2)
                 if len(splited_date) != 3:
                     raise Exception("Invalid date format: " + row[6])
@@ -56,6 +56,7 @@ def hour_string_processor(file_name):
                 else:
                     hour.holiday = False
                     hour.holiday_name = "N/A"
+                hour.hour_id = hour.date + hour.hour_start
                 times.append(hour)
 
     return times
@@ -70,15 +71,15 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["hour_key", "hour_start", "hour_end", "date",
-                         "day_of_week", "day", "month", "year", "weekend", "holiday", "holiday_name"])
+        writer.writerow(["HOUR_KEY", "HOUR_ID", "HOUR_START", "HOUR_END", "DATE",
+                         "DAY_OF_WEEK", "DAY", "MONTH", "YEAR", "WEEKEND", "HOLIDAY", "HOLIDAY_NAME"])
         for hour in list_to_store:
-            writer.writerow([hour.hour_key, hour.hour_start, hour.hour_end, hour.date, hour.day_of_week,
+            writer.writerow([hour.hour_key, hour.hour_id, hour.hour_start, hour.hour_end, hour.date, hour.day_of_week,
                              hour.day, hour.month, hour.year, hour.weekend, hour.holiday, hour.holiday_name])
     csvFile.close()
 
     print("Finished the writing!")
 
 
-list = hour_string_processor("2014collisionsfinal.xls.csv")
+list = hour_string_processor("processed2014Collision.csv")
 output_data_from_list_to_new_csv("2014ProcessedCollisionHourList", list)

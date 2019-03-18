@@ -1,22 +1,27 @@
 import csv
 import sys
 
-ottawaWeatherStationList = []  # global list for storing all the weather stations name that are in Ottawa
 
 total_record = 0
 
 total_valid_record = 0
 
-with open('Station Inventory EN.csv', 'r') as readStations:  # r represent read model
-    print("Start to read the stations...")
-    reader = csv.reader(readStations)
-    lines = list(reader)
-    for line in lines:
-        if ("OTTAWA" in line[0] or "RIDEAU" in line[0]) and "ONTARIO" in line[1]:
-            # if is in Ontario and the station name contains OTTAWA or RIDEAU
-            ottawaWeatherStationList.append(line[0])
-readStations.close()
-print("Finished station reading.")
+
+def generate_weather_station_list():
+    ottawaWeatherStationList = []  # global list for storing all the weather stations name that are in Ottawa
+
+    with open('Station Inventory EN.csv', 'r') as readStations:  # r represent read model
+        print("Start to read the stations...")
+        reader = csv.reader(readStations)
+        lines = list(reader)
+        for line in lines:
+            if ("OTTAWA" in line[0] or "RIDEAU" in line[0]) and "ONTARIO" in line[1]:
+                # if is in Ontario and the station name contains OTTAWA or RIDEAU
+                ottawaWeatherStationList.append(line)
+    readStations.close()
+    print("Finished station reading.")
+    return ottawaWeatherStationList
+
 
 
 def read_ottawa_data_from_csv(file_name):
@@ -29,6 +34,10 @@ def read_ottawa_data_from_csv(file_name):
     result_list = []
     total_ctr = 0
     valid_ctr = 0
+    ottawaWeatherStationList = generate_weather_station_list()
+    ottawaWeatherStationNameList = []
+    for station in ottawaWeatherStationList:
+        ottawaWeatherStationNameList.append(station[0])
     with open(file_name, 'r') as readData:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readData)
@@ -39,7 +48,7 @@ def read_ottawa_data_from_csv(file_name):
             if "Year" in row[1] and "Month" in row[2]:
                 result_list.append(row)
             if "ONTARIO" in row[25]:  # if is Ontario's station
-                if row[24] in ottawaWeatherStationList:  # if is Ottawa's station
+                if row[24] in ottawaWeatherStationNameList:  # if is Ottawa's station
                     result_list.append(row)
                     valid_ctr = valid_ctr + 1
     print("\nFinished loading data. Total of " + str(valid_ctr) + " data records retrieved!")

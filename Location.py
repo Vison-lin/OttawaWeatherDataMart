@@ -7,3 +7,5 @@ class Location:
         self.longitude = 0
         self.latitude = 0
         self.neighborhood = "Ottawa"
+        self.location_id = ""
+        self.closest_weather_station = ""

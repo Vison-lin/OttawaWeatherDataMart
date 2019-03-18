@@ -2,6 +2,7 @@ import csv
 import math
 import sys
 
+from DataFilter import generate_weather_station_list
 from Location import Location
 from NeighborhoodLookupTable import generate_neighborhood_lookup_table
 
@@ -17,6 +18,7 @@ def location_string_processor(file_name):
     total_ctr = 0
     key_ctr = 0
     neighborhoods = generate_neighborhood_lookup_table()
+    weather_stations = generate_weather_station_list()
     with open(file_name, 'r') as readData:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readData)
@@ -68,14 +70,13 @@ def location_string_processor(file_name):
                         raise Exception("Wrong format location address: " + location_str)
                 location.location_key = key_ctr
                 key_ctr = key_ctr + 1
-                location.longitude = row[4]
+                location.longitude = row[2]
                 if ((int(float(location.longitude)) != -75) and (int(float(location.longitude)) != -76)):
-                    raise Exception("Wrong longitude: [" + location.longitude + "], " + row[5])
-                location.latitude = row[5]
+                    raise Exception("Wrong longitude: [" + location.longitude + "], " + row[2])
+                location.latitude = row[3]
                 if int(float(location.latitude)) != 45 and int(float(location.latitude)) != 44:
-                    raise Exception("Wrong latitude: " + row[4] + ", [" + location.latitude + "]")
-                locations.append(location)
-
+                    raise Exception("Wrong latitude: " + row[3] + ", [" + location.latitude + "]")
+                location.location_id = str(location.longitude) + str(location.latitude)
                 shortest_dist = float("inf")
                 for neighborhood in neighborhoods:
                     difflong = float(location.longitude) - neighborhood.longitude
@@ -84,7 +85,15 @@ def location_string_processor(file_name):
                     if distance < shortest_dist:
                         shortest_dist = distance
                         location.neighborhood = neighborhood.neighborhood
-
+                shortest_dist = float("inf")
+                for station in weather_stations:
+                    difflong = float(location.longitude) - float(station[7])  # long
+                    difflati = float(location.latitude) - float(station[6])  # lati
+                    distance = math.sqrt(pow(difflong, 2) + pow(difflati, 2))
+                    if distance < shortest_dist:
+                        shortest_dist = distance
+                        location.closest_weather_station = station[0]  # name
+                locations.append(location)
     return locations
 
 
@@ -97,14 +106,17 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["location_key", "street name", "intersection 1", "intersection 2",
-                         "longitude", "latitude", "neighborhood"])
+        writer.writerow(["LOCATION_KEY", "LOCATION_ID", "STREET_NAME", "INTERSECTION_1", "INTERSECTION_2",
+                         "LONGITUDE", "LATITUDE", "NEIGHBORHOOD", "CLOSEST_WEATHER_STATION_NAME"])
         for location in list_to_store:
-            writer.writerow([location.location_key, location.street_name, location.intersection_one, location.intersection_two, location.longitude, location.latitude, location.neighborhood])
+            writer.writerow([location.location_key, location.location_id, location.street_name,
+                             location.intersection_one, location.intersection_two, location.longitude,
+                             location.latitude, location.neighborhood,
+                             location.closest_weather_station])
     csvFile.close()
 
     print("Finished the writing!")
 
 
-list = location_string_processor("2014collisionsfinal.xls.csv")
+list = location_string_processor("processed2014Collision.csv")
 output_data_from_list_to_new_csv("2014ProcessedCollisionLocationList", list)
