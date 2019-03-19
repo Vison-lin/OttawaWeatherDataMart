@@ -232,6 +232,7 @@ def copy_weather_data_season_same_method():
     winter = [12,1,2]
     season = [spring,summer,fall,winter]
     seasonindex = [winter, spring, summer, fall]
+    seasonstring = ['WINTER','SPRING','SUMMER','FALL']
     station_has_data.clear()
     station_has_name.clear()
     total_data.clear()
@@ -246,7 +247,8 @@ def copy_weather_data_season_same_method():
     for s in total_data:
 
         a += 1
-        
+        if a==1000:
+            break
         sys.stdout.write("\r" + str(a) + " records have been processed!")
         sys.stdout.flush()
 
@@ -258,9 +260,12 @@ def copy_weather_data_season_same_method():
 
         result = s
 
+        seasonnumber = seasonindex.index(checkSeason)
+
+        result.append(seasonstring[seasonnumber])
 
         try:
-            dataProcess = yearmonthlist[yearindex.index(int(s[1]))][seasonindex.index(checkSeason)]
+            dataProcess = yearmonthlist[yearindex.index(int(s[1]))][seasonnumber]
         except ValueError:
             copy_weather_data_season_same.append(result)
             continue
@@ -316,6 +321,8 @@ def copy_weather_data_season_same_method():
                             except ValueError:
 
                                 continue
+
+
                         try:
                             sum2 += float(infor[index])
                             count2 += 1
