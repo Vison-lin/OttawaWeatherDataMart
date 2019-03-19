@@ -45,10 +45,31 @@ def read_source_file(file_name, weather_file_name):
 
 
 def grouping_weather_data_by_year():
+    weather_index = []
+    print("Start indexing weather records")
     for weather in weathers:
-        date = weather[0]
-        date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
-        weathers_in_month[date] = weather
+        date = str(int(weather[1])) + "-" + str(int(weather[2]))
+        if len(date.split("-")) != 2:
+            raise Exception("Wrong data format: " + date)
+        # new_date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
+        if date not in weather_index:
+            weather_index.append(date)
+            # print(date)
+    print("Finished indexing, start to group weather records")
+    ctr = 0
+    l = len(weather_index)
+    for index in weather_index:
+        sys.stdout.write(
+            "\r" + str(ctr) + "/" + str(l) + " index have been processed! Current processing index is: " + index)
+        sys.stdout.flush()
+        ctr = ctr + 1
+        temp_list = []
+        for weather in weathers:
+            date = str(int(weather[1])) + "-" + str(int(weather[2]))
+            if index == date:
+                temp_list.append(weather)
+        weathers_in_month[index] = temp_list
+    print("Finished grouping")
 
 
 def generate_surrogate_key_and_remove_duplicate():
@@ -63,11 +84,13 @@ def generate_surrogate_key_and_remove_duplicate():
         weather_station = collision.location
         sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " collision records have been processed!")
         sys.stdout.flush()
-        for weather in weathers:
-            date = weather[0]
-            date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
-            curr_weather = weathers_in_month[date]
-            if date == curr_weather[0] and curr_weather[24] == weather_station:
+        date = collision.date
+        date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
+        curr_weathers = weathers_in_month[date]
+        for weather in curr_weathers:
+            exact_date = str(weather[1]) + "-" + str(weather[2]) + "-" + str(weather[3]) + " " + str(weather[4])
+            print(date + " - - " + exact_date)
+            if date == exact_date and weather[24] == weather_station:
                 collision.weather_key = weather_key_ctr
                 row_id = [weather_key_ctr]  # generate the id for weather table
                 row = row_id + weather  # add the generated id to the first row
