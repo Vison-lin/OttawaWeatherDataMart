@@ -66,6 +66,49 @@ def separate_data():
 
 
 
+yearmonthlist = []
+def separate_data_month():
+    print('separating_data_month')
+    spring = [3, 4, 5]
+    summer = [6, 7, 8]
+    fall = [9, 10, 11]
+    winter = [12, 1, 2]
+    season = [winter,spring,summer,fall]
+    year = ''
+    data = []
+    data2 = []
+    for s in yearlist:
+        for sea in season:
+            data = []
+            countSeason = 1
+            currentMonth = 0
+            month = sea[0]
+            breakCheck = False
+            for x in s:
+                if(year==''):
+                    year = x[1]
+                    currentMonth = x[2]
+                if int(x[2]) not in sea:
+                    if countSeason == 3:
+                        breakCheck =True
+                        break
+                    else:
+                        continue
+                else:
+                    if (currentMonth != x[2]):
+                        countSeason += 1
+                        currentMonth = x[2]
+                data.append(x)
+                if breakCheck:
+                    break
+            data2.append(data)
+            out_put_new('year_'+str(year)+'_month_'+str(month),'temporary table',data)
+        year = ''
+        yearmonthlist.append(data2)
+
+
+
+
 
 
 
@@ -188,18 +231,22 @@ def copy_weather_data_season_same_method():
     fall = [9,10,11]
     winter = [12,1,2]
     season = [spring,summer,fall,winter]
+    seasonindex = [winter, spring, summer, fall]
     station_has_data.clear()
     station_has_name.clear()
     total_data.clear()
     find_Station_With_Data('temporary table/copy_weather_data_complete_same.csv')
     # print(len(total_data))
     separate_data()
+    separate_data_month()
     missdata = 0
     processdata = 0
 
     a= 0
     for s in total_data:
+
         a += 1
+        
         sys.stdout.write("\r" + str(a) + " records have been processed!")
         sys.stdout.flush()
 
@@ -211,8 +258,9 @@ def copy_weather_data_season_same_method():
 
         result = s
 
+
         try:
-            dataProcess = yearlist[yearindex.index(int(s[1]))]
+            dataProcess = yearmonthlist[yearindex.index(int(s[1]))][seasonindex.index(checkSeason)]
         except ValueError:
             copy_weather_data_season_same.append(result)
             continue
@@ -230,34 +278,35 @@ def copy_weather_data_season_same_method():
                 currentSeason = checkSeason
                 countSeason = 1
                 currentMonth = 0
+                currentData = ''
                 for infor in dataProcess:
 
-                    if (s[1] != infor[1]):
-                        continue
-                    if currentMonth == 0:
-                        currentMonth = infor[2]
-                    if int(infor[2]) not in currentSeason:
-                        if countSeason == 3:
-                            break
-                        else:
-                            continue
-                    else:
-                        if (currentMonth != infor[2]):
-                            countSeason += 1
-                            currentMonth = infor[2]
+                    # if (s[1] != infor[1]):
+                    #     continue
+                    # if currentMonth == 0:
+                    #     currentMonth = infor[2]
+                    # if int(infor[2]) not in currentSeason:
+                    #     if countSeason == 3:
+                    #         break
+                    #     else:
+                    #         continue
+                    # else:
+                    #     if (currentMonth != infor[2]):
+                    #         countSeason += 1
+                    #         currentMonth = infor[2]
 
 
 
 
                     if (infor[index] == ''):
                         continue
-                    # if (index == 21):
 
-                         # if infor[index]!='' and int(infor[2])==2 and int(infor[3])==1:
-                         #    print(infor)
+                    if(currentData==''):
+                        currentData= infor[index]
+                    else:
+                        if(currentData==infor[index]):
+                            continue
 
-
-                    # int(s[4].split(":")[0])==int(infor[4].split(":")[0])
 
                     if(int(s[3])==int(infor[3])and  int(s[4].split(":")[0])==int(infor[4].split(":")[0]) ):
                         if (s[24] == infor[24]):
