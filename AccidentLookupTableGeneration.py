@@ -45,8 +45,8 @@ def accident_processor(collision_file_name, hour_file_name, location_file_name):
             if "COLLISION_ID" not in row[0]:
                 collision = Collision()
                 collision.collision_id = row[0]
-                collision.location_id = locations[ptr]
-                collision.hour_id = hours[ptr]
+                collision.location_id = locations[ptr]  # append corresponding id
+                collision.hour_id = hours[ptr]  # append corresponding id
                 collision.environment = row[6]
                 collision.light = row[7]
                 collision.surface_condition = row[8]

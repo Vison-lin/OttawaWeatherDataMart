@@ -1,16 +1,18 @@
 import csv
+import sys
 
 from Collision import Collision
-from Location import Location
 
 collisions = []
 
-locations = []
+weathers = []
 
-new_locations = []
+weathers_in_month = {}
+
+new_weathers = []
 
 
-def read_source_file(file_name, locoation_file_name):
+def read_source_file(file_name, weather_file_name):
     with open(file_name, 'r') as readCollision:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readCollision)
@@ -29,47 +31,48 @@ def read_source_file(file_name, locoation_file_name):
                 collision.impace_type = row[9]
                 collision.no_of_pedestrians = row[10]
                 collision.date = row[11]
+                collision.location = row[12]
                 collisions.append(collision)
     readCollision.close()
 
-    with open(locoation_file_name, 'r') as readLocation:  # r represent read model
-        print("Start to read file: " + locoation_file_name + ". This may take a while...")
-        file = csv.reader(readLocation)
+    with open(weather_file_name, 'r') as readWeather:  # r represent read model
+        print("Start to read file: " + weather_file_name + ". This may take a while...")
+        file = csv.reader(readWeather)
+        key_ctr = 0
         for row in file:
-            if "HOUR_ID" not in row[0]:
-                location = Location()
-                location.location_id = row[0]
-                location.street_name = row[1]
-                location.intersection_one = row[2]
-                location.intersection_two = row[3]
-                location.longitude = row[4]
-                location.latitude = row[5]
-                location.neighborhood = row[6]
-                location.closest_weather_station = row[7]
-                locations.append(location)
-    readLocation.close()
+            weathers.append(row)
+    readWeather.close()
+
+
+def grouping_weather_data_by_year():
+    for weather in weathers:
+        date = weather[0]
+        date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
+        weathers_in_month[date] = weather
 
 
 def generate_surrogate_key_and_remove_duplicate():
-    prev_value = ""
-    key_ctr = -1
-    print("Start to remove duplicate in hour dim table")
-    for location in locations:
-        curr_value = location.location_id
-        if prev_value != curr_value:  # if not the same
-            prev_value = curr_value
-            key_ctr = key_ctr + 1
-            location.location_key = key_ctr
-            new_locations.append(location)
-        else:  # if the same
-            location.location_key = key_ctr
-    print("Finished processing in hour dim table, start to processing collision table")
+    grouping_weather_data_by_year()
+
+    weather_key_ctr = 0
+
+    ctr = 0
+    l = len(collisions)
     for collision in collisions:
-        for location in new_locations:
-            if collision.location_id == location.location_id:
-                collision.location_key = location.location_key  # replace the id with key
-                collision.location = location.closest_weather_station  # temp use collision location to store closest weather station
-    print("Finished processing collision table")
+        ctr = ctr + 1
+        weather_station = collision.location
+        sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " collision records have been processed!")
+        sys.stdout.flush()
+        for weather in weathers:
+            date = weather[0]
+            date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
+            curr_weather = weathers_in_month[date]
+            if date == curr_weather[0] and curr_weather[24] == weather_station:
+                collision.weather_key = weather_key_ctr
+                row_id = [weather_key_ctr]  # generate the id for weather table
+                row = row_id + weather  # add the generated id to the first row
+                weather = row
+                new_weathers.append(weather)
 
 
 def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name):
@@ -95,13 +98,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
     with open(output_dim_table_name + ".csv", 'w', newline='') as dimCsvFile:
         print("Prepare to write the data into the file: " + output_dim_table_name + ". It might take a while...")
         writer = csv.writer(dimCsvFile)
-        writer.writerow(["LOCATION_KEY", "STREET_NAME", "INTERSECTION_1", "INTERSECTION_2",
-                         "LONGITUDE", "LATITUDE", "NEIGHBORHOOD", "CLOSEST_WEATHER_STATION_NAME"])
-        for location in new_locations:
-            writer.writerow([location.location_key, location.street_name,
-                             location.intersection_one, location.intersection_two, location.longitude,
-                             location.latitude, location.neighborhood,
-                             location.closest_weather_station])
+        writer.writerow(["WEATHER_ID", "DATE", "YEAR", "MONTH", "DAY", "TIME", "TEMPERATURE_C", "TEMPERATURE_FLAG"
+                                                                                                "DEW_POINT_TEMP_C",
+                         "DEW_POINT_TEMP_FLAG", "REL_HUM", "REL_HUM_FLAG", "WIND_DIR",
+                         "WIND_DIR_FLAG", "WIND_SPEED", "WIND_SPEED_FLAG", "VISIBILITY", "VISIBILITY_FLAG",
+                         "STN_PRESS_KPA", "STN.PRESS.FLAG", "HMDX", "HMDX_FLAG", "WIND_CHILL", "WIND_CHILL_FLAG",
+                         "WEATHER", "STATION_NAME", "STATION_PROVINCE"])
+        writer.writerows(new_weathers)
     dimCsvFile.close()
 
     print("Finished the writing!")
@@ -109,18 +112,18 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
 
 def data_staging_phase_two(input_file_name, dim_table_name, output_file_name, output_dim_table_name):
     read_source_file(input_file_name, dim_table_name)
-    print("Finished reading, start sorting")
-    temp_collisions = sorted(collisions, key=lambda x: x.hour_id)
-    temp_locations = sorted(locations, key=lambda x: x.location_id)
-    print("Finished sorting")
-    collisions.clear()
-    locations.clear()
-    collisions.extend(temp_collisions)
-    locations.extend(temp_locations)
+    # print("Finished reading, start sorting")
+    # temp_collisions = sorted(collisions, key=lambda x: x.hour_id)
+    # temp_locations = sorted(locations, key=lambda x: x.location_id)
+    # print("Finished sorting")
+    # collisions.clear()
+    # locations.clear()
+    # collisions.extend(temp_collisions)
+    # locations.extend(temp_locations)
     print("Start generate surrogate key and remove duplicate")
     generate_surrogate_key_and_remove_duplicate()
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
 
-data_staging_phase_two("Staging_1_Main.csv", "2014ProcessedCollisionLocationList.csv", "Staging_2_Main",
-                       "Staging_2_Location")
+data_staging_phase_two("Staging_2_Main.csv", "copy_weather_data_season_same.csv", "Staging_3_Main",
+                       "Staging_3_WEATHER")

@@ -35,9 +35,15 @@ def hour_string_processor(file_name):
                 time_period = time.split(" ", 1)[1]
                 h = time.split(":", 1)[0]
                 if "AM" in time_period:
+                    if int(h) > 12:
+                        raise Exception("Wrong time format: " + time)
                     hour.hour_start = h + ":00:00"
                     hour.hour_end = h + ":59:59"
                 elif "PM" in time_period:
+                    if int(h) > 12:
+                        raise Exception("Wrong time format: " + time)
+                    if int(h) == 24:
+                        h = 0
                     hour.hour_start = str((int(h) + 12)) + ":00:00"
                     hour.hour_end = str((int(h) + 12)) + ":59:59"
                 else:
@@ -81,3 +87,6 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
 def unbucketizeHourTable():
     list = hour_string_processor("processed2014Collision.csv")
     output_data_from_list_to_new_csv("2014ProcessedCollisionHourList", list)
+
+
+unbucketizeHourTable()
