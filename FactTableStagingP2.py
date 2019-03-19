@@ -10,7 +10,7 @@ locations = []
 new_locations = []
 
 
-def read_source_file(file_name, hour_file_name):
+def read_source_file(file_name, locoation_file_name):
     with open(file_name, 'r') as readCollision:  # r represent read model
         print("Start to read file: " + file_name + ". This may take a while...")
         file = csv.reader(readCollision)
@@ -28,12 +28,13 @@ def read_source_file(file_name, hour_file_name):
                 collision.collision_classification = row[8]
                 collision.impace_type = row[9]
                 collision.no_of_pedestrians = row[10]
+                collision.date = row[11]
                 collisions.append(collision)
     readCollision.close()
 
-    with open(hour_file_name, 'r') as readHour:  # r represent read model
-        print("Start to read file: " + hour_file_name + ". This may take a while...")
-        file = csv.reader(readHour)
+    with open(locoation_file_name, 'r') as readLocation:  # r represent read model
+        print("Start to read file: " + locoation_file_name + ". This may take a while...")
+        file = csv.reader(readLocation)
         for row in file:
             if "HOUR_ID" not in row[0]:
                 location = Location()
@@ -46,7 +47,7 @@ def read_source_file(file_name, hour_file_name):
                 location.neighborhood = row[6]
                 location.closest_weather_station = row[7]
                 locations.append(location)
-    readHour.close()
+    readLocation.close()
 
 
 def generate_surrogate_key_and_remove_duplicate():
@@ -67,6 +68,7 @@ def generate_surrogate_key_and_remove_duplicate():
         for location in new_locations:
             if collision.location_id == location.location_id:
                 collision.location_key = location.location_key  # replace the id with key
+                collision.location = location.closest_weather_station  # temp use collision location to store closest weather station
     print("Finished processing collision table")
 
 
@@ -80,13 +82,14 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
         writer = csv.writer(csvFile)
         writer.writerow(["COLLISION_ID", "LOCATION_KEY", "HOUR_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
-                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS"])
+                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP",
+                         "WEATHER_STATION_STAMP"])
         for collision in collisions:
             writer.writerow([collision.collision_id, collision.location_key, collision.hour_key,
                              collision.environment, collision.light,
                              collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
-                             collision.impace_type, collision.no_of_pedestrians])
+                             collision.impace_type, collision.no_of_pedestrians, collision.date, collision.location])
     csvFile.close()
 
     with open(output_dim_table_name + ".csv", 'w', newline='') as dimCsvFile:
@@ -118,5 +121,6 @@ def data_staging_phase_two(input_file_name, dim_table_name, output_file_name, ou
     generate_surrogate_key_and_remove_duplicate()
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
-# data_staging_phase_two("Staging_1_Main.csv", "2014ProcessedCollisionLocationList.csv", "Staging_2_Main",
-#                        "Staging_2_Location")
+
+data_staging_phase_two("Staging_1_Main.csv", "2014ProcessedCollisionLocationList.csv", "Staging_2_Main",
+                       "Staging_2_Location")

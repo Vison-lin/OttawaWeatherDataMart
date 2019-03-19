@@ -265,12 +265,15 @@ def copy_weather_data_season_same_method():
     processdata = 0
 
     a= 0
+    start = time.time()
+    l = len(total_data)
     for s in total_data:
-
         a += 1
-        if a==1000:
-            break
-        sys.stdout.write("\r" + str(a) + " records have been processed!")
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        sys.stdout.write("\r" + str(a) + "/" + str(l) + " records have been processed! Time escaped for current copy_weather_data_season_same_method() is: " + "{:0>2}:{:0>2}:{:05.2f}".format(
+            int(hours), int(minutes), seconds) + " :(")
         sys.stdout.flush()
 
         checkSeason = []

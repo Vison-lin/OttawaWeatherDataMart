@@ -70,6 +70,16 @@ def generate_surrogate_key_and_remove_duplicate():
         for hour in new_hours:
             if collision.hour_id == hour.hour_id:
                 collision.hour_key = hour.hour_key  # replace the id with key
+                if len(hour.month) == 1:
+                    hour.month = "0" + hour.month
+                if len(hour.month) > 2:
+                    raise Exception("Invalid hour month format" + hour.month)
+                if len(hour.day) == 1:
+                    hour.day = "0" + hour.day
+                if len(hour.day) > 2:
+                    raise Exception("Invalid hour day format" + hour.day)
+                collision.date = str(hour.year) + "-" + str(hour.month) + "-" + str(hour.day) + " " + str(
+                    hour.hour_start)
     print("Finished processing collision table")
 
 
@@ -83,13 +93,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
         writer = csv.writer(csvFile)
         writer.writerow(["COLLISION_ID", "LOCATION_ID", "HOUR_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
-                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS"])
+                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP"])
         for collision in collisions:
             writer.writerow([collision.collision_id, collision.location_id, collision.hour_key,
                              collision.environment, collision.light,
                              collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
-                             collision.impace_type, collision.no_of_pedestrians])
+                             collision.impace_type, collision.no_of_pedestrians, collision.date])
     csvFile.close()
 
     with open(output_dim_table_name + ".csv", 'w', newline='') as dimCsvFile:
@@ -119,4 +129,6 @@ def data_staging_phase_one(input_file_name, dim_table_name, output_file_name, ou
     generate_surrogate_key_and_remove_duplicate()
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
-# data_staging_phase_one("LOOKUP_TABLE_2014.csv", "2014ProcessedCollisionHourList.csv", "Staging_1_Main", "Staging_1_Hour")
+
+data_staging_phase_one("LOOKUP_TABLE_2014.csv", "2014ProcessedCollisionHourList.csv", "Staging_1_Main",
+                       "Staging_1_Hour")

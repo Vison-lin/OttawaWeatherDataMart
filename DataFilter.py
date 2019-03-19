@@ -1,7 +1,6 @@
 import csv
 import sys
 
-
 total_record = 0
 
 total_valid_record = 0
@@ -17,11 +16,11 @@ def generate_weather_station_list():
         for line in lines:
             if ("OTTAWA" in line[0] or "RIDEAU" in line[0]) and "ONTARIO" in line[1]:
                 # if is in Ontario and the station name contains OTTAWA or RIDEAU
-                ottawaWeatherStationList.append(line)
+                if "NOTTAWASAGA ISLAND" != line[0]:  # exclude the exception todo testing!
+                    ottawaWeatherStationList.append(line)
     readStations.close()
     print("Finished station reading.")
     return ottawaWeatherStationList
-
 
 
 def read_ottawa_data_from_csv(file_name):
@@ -66,7 +65,7 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
     """
 
     def output_data_from_list_to_new_csv_helper(sub_file_name, sub_list_to_store):
-        with open(sub_file_name+".csv", 'w', newline='') as csvFile:
+        with open(sub_file_name + ".csv", 'w', newline='') as csvFile:
             print("Prepare to write the data into the file: " + sub_file_name + ". It might take a while...")
             writer = csv.writer(csvFile)
             writer.writerows(sub_list_to_store)
@@ -88,7 +87,7 @@ def output_data_from_list_to_new_csv(file_name, list_to_store, num_of_row_per_fi
                 print("start dividing the second file")
             if name_ctr == 2:
                 print("start dividing the third file")
-            if name_ctr >2:
+            if name_ctr > 2:
                 print("start dividing the " + str(name_ctr + 1) + "th file")
             if name_ctr != 0:
                 output_data_from_list_to_new_csv_helper(file_name + "_" + str(name_ctr), sublist)

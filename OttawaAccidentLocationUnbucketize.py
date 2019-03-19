@@ -118,3 +118,4 @@ def output_data_from_list_to_new_csv(file_name, list_to_store):
 def unbucketizeLocationTable():
     list = location_string_processor("processed2014Collision.csv")
     output_data_from_list_to_new_csv("2014ProcessedCollisionLocationList", list)
+unbucketizeLocationTable()
