@@ -1,14 +1,10 @@
 import csv
 
-from AccidentLookupTableGeneration import lookup_table_generation
 from AccidentLookupTablePreprocessor import collision_processor, remove_prefix, \
     output_collision_data_from_list_to_new_csv
 from Collision import Collision
-from FactTableStagingP1 import data_staging_phase_one
-from FactTableStagingP2 import data_staging_phase_two
-from FactTableStagingP3 import data_staging_phase_three
-from OttawaAccidentHourTableUnbucketize import unbucketizeHourTable
-from OttawaAccidentLocationUnbucketize import unbucketizeLocationTable
+from EventTableGenerator import generate_event_table
+from FactTableStagingP4 import data_staging_phase_four
 
 
 def process_collision_table():
@@ -114,7 +110,17 @@ print("##### Staging 2 #####")
 print("##### Finished Staging 2 #####")
 print("##### Staging 3 #####")
 
-data_staging_phase_three("Staging_2_Main.csv", "weather_data_final_finish.csv", "Staging_3_Main",
-                       "Final_Weather")
+# data_staging_phase_three("Staging_2_Main.csv", "weather_data_final_finish.csv", "Staging_3_Main",
+#                        "Final_Weather")
 
 print("##### Finished Staging 3 #####")
+print("##### Generating Event table #####")
+
+generate_event_table("Event_table")
+
+print("##### Finished generating Event table #####")
+print("##### Staging 4 #####")
+
+data_staging_phase_four("Staging_3_Main.csv", "Event_table.csv", "Staging_4_Main", "Final_Event")
+
+print("##### Finished Staging 4 #####")
