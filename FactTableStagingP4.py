@@ -95,13 +95,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["COLLISION_ID", "LOCATION_ID", "HOUR_KEY", "EVENT_KEY", "ENVIRONMENT",
+        writer.writerow(["COLLISION_ID", "LOCATION_ID", "HOUR_KEY", "WEATHER_KEY", "EVENT_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
                          "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP"])
         for collision in collisions:
-            writer.writerow([collision.collision_id, collision.location_id, collision.hour_key,
-                             collision.event_key, collision.environment, collision.light,
-                             collision.event_key, collision.surface_condition, collision.traffic_control,
+            writer.writerow([collision.collision_id, collision.location_key, collision.hour_key,
+                             collision.weather_key, collision.event_key, collision.environment, collision.light,
+                             collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
                              collision.impace_type, collision.no_of_pedestrians, collision.date])
     csvFile.close()
