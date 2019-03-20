@@ -20,7 +20,7 @@ def read_source_file(file_name, weather_file_name):
             if "COLLISION_ID" not in row[0]:
                 collision = Collision()
                 collision.collision_id = row[0]
-                collision.location_id = row[1]
+                collision.location_key = row[1]
                 collision.hour_key = row[2]
                 collision.environment = row[3]
                 collision.light = row[4]
@@ -41,6 +41,7 @@ def read_source_file(file_name, weather_file_name):
         key_ctr = 0
         for row in file:
             weathers.append(row)
+            # print(row[0]+" @ "+row[24])
     readWeather.close()
 
 
@@ -67,6 +68,7 @@ def grouping_weather_data_by_year():
         for weather in weathers:
             date = str(int(weather[1])) + "-" + str(int(weather[2]))
             if index == date:
+                # print(index)
                 temp_list.append(weather)
         weathers_in_month[index] = temp_list
     print("Finished grouping")
@@ -80,23 +82,33 @@ def generate_surrogate_key_and_remove_duplicate():
     ctr = 0
     l = len(collisions)
     for collision in collisions:
+        founded = False
         ctr = ctr + 1
         weather_station = collision.location
-        sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " collision records have been processed!")
-        sys.stdout.flush()
         date = collision.date
         date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
         curr_weathers = weathers_in_month[date]
+        temp_date = " ".join(collision.date.split(":")[0].split(" ", 2)) + ":00"
+        sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " collision records have been processed! current one has cooresponding weather record: " + str(len(curr_weathers)))
+        sys.stdout.flush()
         for weather in curr_weathers:
-            exact_date = str(weather[1]) + "-" + str(weather[2]) + "-" + str(weather[3]) + " " + str(weather[4])
-            print(date + " - - " + exact_date)
-            if date == exact_date and weather[24] == weather_station:
+            temp_h = str(int(weather[4].split(":")[0])) + ":" + "00"
+            exact_date = str(int(weather[1])) + "-" + str(int(weather[2])) + "-" + str(int(weather[3])) + " " + temp_h
+            # print("|"+temp_date + "| - - |" + exact_date+"|"+weather_station)
+            if temp_date == exact_date and weather[24] == weather_station:
+                if founded:
+                    raise Exception("Duplicated weather data")
+                founded = True
                 collision.weather_key = weather_key_ctr
                 row_id = [weather_key_ctr]  # generate the id for weather table
                 row = row_id + weather  # add the generated id to the first row
                 weather = row
                 new_weathers.append(weather)
-
+                weather_key_ctr = weather_key_ctr + 1
+        if not founded:
+            # raise Exception("Missing weather data for: " + collision.date + "@ " + collision.location)
+            print("### WEATHER NOT FOUNDED!!! " + collision.date + "@" + collision.location +": " + collision)
+    print("Finished grouping!")
 
 def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name):
     """
@@ -106,13 +118,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
     with open(file_name + ".csv", 'w', newline='') as csvFile:
         print("Prepare to write the data into the file: " + file_name + ". It might take a while...")
         writer = csv.writer(csvFile)
-        writer.writerow(["COLLISION_ID", "LOCATION_KEY", "HOUR_KEY", "ENVIRONMENT",
+        writer.writerow(["COLLISION_ID", "LOCATION_KEY", "HOUR_KEY", "WEATHER_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
                          "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP",
                          "WEATHER_STATION_STAMP"])
         for collision in collisions:
             writer.writerow([collision.collision_id, collision.location_key, collision.hour_key,
-                             collision.environment, collision.light,
+                             collision.weather_key, collision.environment, collision.light,
                              collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
                              collision.impace_type, collision.no_of_pedestrians, collision.date, collision.location])
@@ -133,7 +145,7 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
     print("Finished the writing!")
 
 
-def data_staging_phase_two(input_file_name, dim_table_name, output_file_name, output_dim_table_name):
+def data_staging_phase_three(input_file_name, dim_table_name, output_file_name, output_dim_table_name):
     read_source_file(input_file_name, dim_table_name)
     # print("Finished reading, start sorting")
     # temp_collisions = sorted(collisions, key=lambda x: x.hour_id)
@@ -148,5 +160,4 @@ def data_staging_phase_two(input_file_name, dim_table_name, output_file_name, ou
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
 
-data_staging_phase_two("Staging_2_Main.csv", "copy_weather_data_season_same.csv", "Staging_3_Main",
-                       "Staging_3_WEATHER")
+

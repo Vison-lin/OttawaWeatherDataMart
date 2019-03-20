@@ -730,8 +730,8 @@ def main():
 
     # print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
 
-    input = 'weather_data_final'
-    output= 'weather_data_final_finish'
+    input = '2008_process'
+    output= '2008_finish'
 
     # print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
     print("Finally, missing data|processing data : " + copy_weather_data_final_method(input, output))
