@@ -388,7 +388,7 @@ thrid step to fill missing data
 
 copy_weather_data_year_season_same = []
 
-def copy_weather_data_year_season_same_method():
+def copy_weather_data_year_season_same_method(input,output):
     spring = [3,4,5]
     summer = [6,7,8]
     fall = [9,10,11]
@@ -399,21 +399,29 @@ def copy_weather_data_year_season_same_method():
     station_has_data.clear()
     station_has_name.clear()
     total_data.clear()
-    find_data_final('temporary table/copy_weather_data_complete_same.csv')
+    find_data_final('temporary table/'+input+'.csv')
     separate_data()
     separate_data_month()
     missdata = 0
     processdata = 0
     processlist = [15,19]
-
+    start = time.time()
     a= 0
+    l = len(total_data)
     for s in total_data:
 
         a += 1
         if a==100000:
             break
-        sys.stdout.write("\r" + str(a) + " records have been processed!")
+
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        sys.stdout.write("\r" + str(a) + "/" + str(
+            l) + " records have been processed! Time escaped for current copy_weather_data_season_same_method() is: " + "{:0>2}:{:0>2}:{:05.2f}".format(
+            int(hours), int(minutes), seconds) + " :(")
         sys.stdout.flush()
+
 
         checkSeason = []
         for sea in season:
@@ -535,7 +543,7 @@ def copy_weather_data_year_season_same_method():
 
 
         copy_weather_data_year_season_same.append(result)
-    out_put_new('copy_weather_data_year_season_same', 'temporary table', copy_weather_data_year_season_same)
+    out_put_new(output, 'temporary table', copy_weather_data_year_season_same)
     print("finish copy_weather_data_year_season_same !!")
     return str(missdata)+' | '+str(processdata)
 
@@ -573,7 +581,10 @@ def main():
 
     # print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
 
-    print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method())
+    input = '2008_process'
+    output= '2008_finish'
+
+    print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
 
     end = time.time()
     hours, rem = divmod(end - start, 3600)
