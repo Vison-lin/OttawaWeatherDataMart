@@ -87,6 +87,6 @@ def output_collision_data_from_list_to_new_csv(file_name, list_to_store):
     print("Finished the writing!")
 
 
-list = accident_processor("processed2014Collision.csv", "2014ProcessedCollisionHourList.csv",
-                          "2014ProcessedCollisionLocationList.csv")
-output_collision_data_from_list_to_new_csv("LOOKUP_TABLE_2014", list)
+def lookup_table_generation(collision, hour, location, output):
+    list = accident_processor(collision, hour, location)
+    output_collision_data_from_list_to_new_csv(output, list)

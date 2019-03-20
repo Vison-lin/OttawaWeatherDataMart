@@ -78,7 +78,7 @@ def generate_surrogate_key_and_remove_duplicate():
                     hour.day = "0" + hour.day
                 if len(hour.day) > 2:
                     raise Exception("Invalid hour day format" + hour.day)
-                collision.date = str(hour.year) + "-" + str(hour.month) + "-" + str(hour.day) + " " + str(
+                collision.date = str(hour.year) + "-" + str(int(hour.month)) + "-" + str(int(hour.day)) + " " + str(
                     hour.hour_start)
     print("Finished processing collision table")
 
@@ -129,6 +129,5 @@ def data_staging_phase_one(input_file_name, dim_table_name, output_file_name, ou
     generate_surrogate_key_and_remove_duplicate()
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
-
-data_staging_phase_one("LOOKUP_TABLE_2014.csv", "2014ProcessedCollisionHourList.csv", "Staging_1_Main",
-                       "Staging_1_Hour")
+# data_staging_phase_one("LOOKUP_TABLE_2014.csv", "2014ProcessedCollisionHourList.csv", "Staging_1_Main",
+#                        "Staging_1_Hour")

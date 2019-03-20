@@ -41,6 +41,7 @@ def read_source_file(file_name, weather_file_name):
         key_ctr = 0
         for row in file:
             weathers.append(row)
+            # print(row[0]+" @ "+row[24])
     readWeather.close()
 
 
@@ -67,6 +68,7 @@ def grouping_weather_data_by_year():
         for weather in weathers:
             date = str(int(weather[1])) + "-" + str(int(weather[2]))
             if index == date:
+                # print(index)
                 temp_list.append(weather)
         weathers_in_month[index] = temp_list
     print("Finished grouping")
@@ -80,6 +82,7 @@ def generate_surrogate_key_and_remove_duplicate():
     ctr = 0
     l = len(collisions)
     for collision in collisions:
+        founded = False
         ctr = ctr + 1
         weather_station = collision.location
         sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " collision records have been processed!")
@@ -87,16 +90,23 @@ def generate_surrogate_key_and_remove_duplicate():
         date = collision.date
         date = "-".join(date.split(" ", 1)[0].split("-", 2)[:2])
         curr_weathers = weathers_in_month[date]
+        temp_date = " ".join(collision.date.split(":")[0].split(" ", 2)) + ":00"
         for weather in curr_weathers:
-            exact_date = str(weather[1]) + "-" + str(weather[2]) + "-" + str(weather[3]) + " " + str(weather[4])
-            print(date + " - - " + exact_date)
-            if date == exact_date and weather[24] == weather_station:
+            temp_h = str(int(weather[4].split(":")[0])) + ":" + "00"
+            exact_date = str(int(weather[1])) + "-" + str(int(weather[2])) + "-" + str(int(weather[3])) + " " + temp_h
+            # print("|"+temp_date + "| - - |" + exact_date+"|"+weather_station)
+            if temp_date == exact_date and weather[24] == weather_station:
+                if founded:
+                    raise Exception("Duplicated weather data")
+                founded = True
                 collision.weather_key = weather_key_ctr
                 row_id = [weather_key_ctr]  # generate the id for weather table
                 row = row_id + weather  # add the generated id to the first row
                 weather = row
                 new_weathers.append(weather)
-
+        if not founded:
+            raise Exception("Missing weather data for: " + collision.date + "@ " + collision.location)
+    print("Finished grouping!")
 
 def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name):
     """

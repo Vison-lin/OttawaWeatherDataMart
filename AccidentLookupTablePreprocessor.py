@@ -103,6 +103,5 @@ def remove_prefix(string, replacement):
         string = replacement
     return string
 
-
-list = collision_processor("2014collisionsfinal.xls.csv")
-output_collision_data_from_list_to_new_csv("processed2014Collision", list)
+# list = collision_processor("2014collisionsfinal.xls.csv")
+# output_collision_data_from_list_to_new_csv("processed2014Collision", list)

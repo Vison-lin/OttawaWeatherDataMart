@@ -121,6 +121,5 @@ def data_staging_phase_two(input_file_name, dim_table_name, output_file_name, ou
     generate_surrogate_key_and_remove_duplicate()
     output_collision_data_from_list_to_new_csv(output_file_name, output_dim_table_name)
 
-
-data_staging_phase_two("Staging_1_Main.csv", "2014ProcessedCollisionLocationList.csv", "Staging_2_Main",
-                       "Staging_2_Location")
+# data_staging_phase_two("Staging_1_Main.csv", "2014ProcessedCollisionLocationList.csv", "Staging_2_Main",
+#                        "Staging_2_Location")
