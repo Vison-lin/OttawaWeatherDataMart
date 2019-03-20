@@ -126,6 +126,7 @@ def separate_data_month():
             out_put_new('year_'+str(year)+'_month_'+str(month),'temporary table',data)
         year = ''
         yearmonthlist.append(data2)
+        data2=[]
 
 
 
@@ -411,8 +412,6 @@ def copy_weather_data_year_season_same_method(input,output):
     for s in total_data:
 
         a += 1
-        if a==100000:
-            break
 
         end = time.time()
         hours, rem = divmod(end - start, 3600)
@@ -549,6 +548,156 @@ def copy_weather_data_year_season_same_method(input,output):
 
 
 
+'''
+fourth step to fill missing data
+'''
+
+final_data = []
+
+def copy_weather_data_final_method(input,output):
+    spring = [3,4,5]
+    summer = [6,7,8]
+    fall = [9,10,11]
+    winter = [12,1,2]
+    season = [spring,summer,fall,winter]
+    seasonindex = [winter, spring, summer, fall]
+    seasonstring = ['WINTER','SPRING','SUMMER','FALL']
+    station_has_data.clear()
+    station_has_name.clear()
+    total_data.clear()
+    find_data_final('Final table/'+input+'.csv')
+    separate_data()
+    separate_data_month()
+    missdata = 0
+    processdata = 0
+    replace = total_data[0]
+    start = time.time()
+    a= 0
+    l = len(total_data)
+
+
+    for s in total_data:
+
+
+        a += 1
+
+
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        sys.stdout.write("\r" + str(a) + "/" + str(
+            l) + " records have been processed! Time escaped for current copy_weather_data_season_same_method() is: " + "{:0>2}:{:0>2}:{:05.2f}".format(
+            int(hours), int(minutes), seconds) + " :(")
+        sys.stdout.flush()
+
+
+        checkSeason = []
+        for sea in season:
+            if int(s[2]) in sea:
+                checkSeason = sea
+                break
+
+        result = s
+
+        seasonnumber = seasonindex.index(checkSeason)
+
+        result.append(seasonstring[seasonnumber])
+
+
+        if result[23] == 'N/A'or result[23]=='NA':
+            result[23] = 'Unknown'
+
+        if result[23] == 'NOTTAWASAGA ISLAND':
+            continue
+
+
+        for index in range(5,23):
+            if index in noChange:
+                continue
+            if result[index]=='':
+                sum = 0
+                count = 0
+                sum2 = 0
+                count2 = 0
+
+                for list in yearmonthlist:
+                    if list[0][0][1]==s[1]:
+                        continue
+
+
+                    for infor in list[seasonnumber]:
+
+                        if (infor[index] == ''):
+                            continue
+
+
+                        if (int(s[3]) == int(infor[3]) and int(s[4].split(":")[0]) == int(infor[4].split(":")[0])):
+                            result[index] = infor[index]
+                            break
+
+                            if (int(s[2]) == int(infor[2])):
+                                result[index] = infor[index]
+                                break
+
+                            if (s[24] == infor[24]):
+                                try:
+                                    sum += float(infor[index])
+                                    count += 1
+                                except ValueError:
+
+                                    continue
+
+                            try:
+                                sum2 += float(infor[index])
+                                count2 += 1
+
+                            except ValueError:
+
+                                continue
+
+                    if (sum2 != 0):
+                        if (count2 == 0):
+                            count2 = 1
+                        result[index] = str(sum2 / count2)
+
+                    if (sum != 0):
+                        if (count == 0):
+                            count = 1
+                        result[index] = str(sum / count)
+
+                    if (result[index] == ''):
+                        continue
+
+                    else:
+                        break
+
+                if (sum2 != 0):
+                    if (count2 == 0):
+                        count2 = 1
+                    result[index] = str(sum2 / count2)
+
+                if (sum != 0):
+                    if (count == 0):
+                        count = 1
+                    result[index] = str(sum / count)
+
+                if (result[index] == ''):
+                    result[index] = replace[index]
+                    processdata += 1
+                    break
+                replace[index] = result[index]
+                processdata+=1
+
+
+        final_data.append(result)
+    out_put_new(output, 'temporary table', final_data)
+    print("finish copy_weather_data_final_method !!")
+    return str(missdata) + ' | ' + str(processdata)
+
+
+
+
+
 
 
 
@@ -581,10 +730,12 @@ def main():
 
     # print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
 
-    input = '2008_process'
-    output= '2008_finish'
+    input = 'weather_data_final'
+    output= 'weather_data_final_finish'
 
-    print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
+    # print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
+    print("Finally, missing data|processing data : " + copy_weather_data_final_method(input, output))
+
 
     end = time.time()
     hours, rem = divmod(end - start, 3600)
