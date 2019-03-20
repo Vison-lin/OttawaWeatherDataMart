@@ -3,7 +3,7 @@ import csv
 import time
 import sys
 
-noChange = [6,8,10,12,14,15,16,18,19,20,22]  # the index of column will do not process
+noChange = [6,8,10,12,14,16,18,19,20,22]  # the index of column will do not process
 
 total_data = [] # to save all the weather data
 
@@ -40,6 +40,27 @@ def find_Station_With_Data(filename):
     station_has_data.sort(key=takeDate)
     total_data.sort(key=takeDate)
     csvfile.close()
+
+
+def find_data_final(filename):
+    print('finding_data_final_version..')
+    csvfile = open(filename, 'r')
+    weather_file = csv.reader(csvfile)
+    for s in weather_file:
+        if (s[24] not in station_has_name):
+            station_has_name.append(s[24])
+        station_has_data.append(s)
+        total_data.append(s)
+
+    def takeDate(elem):
+        return elem[1]
+    station_has_data.sort(key=takeDate)
+    total_data.sort(key=takeDate)
+    csvfile.close()
+    print(len(total_data))
+
+
+
 
 
 def separate_data():
@@ -244,12 +265,15 @@ def copy_weather_data_season_same_method():
     processdata = 0
 
     a= 0
+    start = time.time()
+    l = len(total_data)
     for s in total_data:
-
         a += 1
-        if a==1000:
-            break
-        sys.stdout.write("\r" + str(a) + " records have been processed!")
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        sys.stdout.write("\r" + str(a) + "/" + str(l) + " records have been processed! Time escaped for current copy_weather_data_season_same_method() is: " + "{:0>2}:{:0>2}:{:05.2f}".format(
+            int(hours), int(minutes), seconds) + " :(")
         sys.stdout.flush()
 
         checkSeason = []
@@ -357,6 +381,176 @@ def copy_weather_data_season_same_method():
 
 
 
+'''
+thrid step to fill missing data
+'''
+
+
+copy_weather_data_year_season_same = []
+
+def copy_weather_data_year_season_same_method(input,output):
+    spring = [3,4,5]
+    summer = [6,7,8]
+    fall = [9,10,11]
+    winter = [12,1,2]
+    season = [spring,summer,fall,winter]
+    seasonindex = [winter, spring, summer, fall]
+    seasonstring = ['WINTER','SPRING','SUMMER','FALL']
+    station_has_data.clear()
+    station_has_name.clear()
+    total_data.clear()
+    find_data_final('temporary table/'+input+'.csv')
+    separate_data()
+    separate_data_month()
+    missdata = 0
+    processdata = 0
+    processlist = [15,19]
+    start = time.time()
+    a= 0
+    l = len(total_data)
+    for s in total_data:
+
+        a += 1
+        if a==100000:
+            break
+
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+        sys.stdout.write("\r" + str(a) + "/" + str(
+            l) + " records have been processed! Time escaped for current copy_weather_data_season_same_method() is: " + "{:0>2}:{:0>2}:{:05.2f}".format(
+            int(hours), int(minutes), seconds) + " :(")
+        sys.stdout.flush()
+
+
+        checkSeason = []
+        for sea in season:
+            if int(s[2]) in sea:
+                checkSeason = sea
+                break
+
+        result = s
+
+        seasonnumber = seasonindex.index(checkSeason)
+
+        result.append(seasonstring[seasonnumber])
+
+        try:
+            dataProcess_year = yearlist[yearindex.index(int(s[1]))]
+            dataProcess_season = yearmonthlist[yearindex.index(int(s[1]))][seasonnumber]
+        except ValueError:
+            copy_weather_data_season_same.append(result)
+            continue
+
+
+        if result[23] == 'N/A' or result[23]=='NA':
+            for d in dataProcess_season:
+                if d[23]=='N/A' or d[23]=='NA':
+                    continue
+                if d[0]!=result[0]:
+                    continue
+                result[23]=d[23]
+                break
+
+
+        for index in range(5,23):
+            if index in noChange:
+                continue
+            if(result[index]==''):
+                sum = 0
+                count = 0
+                sum2 = 0
+                count2 =0
+                currentSeason = checkSeason
+                countSeason = 1
+                currentMonth = 0
+                currentData = ''
+                for infor in dataProcess_season:
+
+                    # if (s[1] != infor[1]):
+                    #     continue
+                    # if currentMonth == 0:
+                    #     currentMonth = infor[2]
+                    # if int(infor[2]) not in currentSeason:
+                    #     if countSeason == 3:
+                    #         break
+                    #     else:
+                    #         continue
+                    # else:
+                    #     if (currentMonth != infor[2]):
+                    #         countSeason += 1
+                    #         currentMonth = infor[2]
+
+
+
+
+                    if (infor[index] == ''):
+                        continue
+
+                    if(currentData==''):
+                        currentData= infor[index]
+                    else:
+                        if(currentData==infor[index]):
+                            continue
+
+
+                    if(int(s[3])==int(infor[3])and  int(s[4].split(":")[0])==int(infor[4].split(":")[0]) ):
+
+                        if(int(s[2])==int(infor[2])):
+                            result[index] = infor[index]
+                            break
+
+
+                        if (s[24] == infor[24]):
+                            try:
+                                sum += float(infor[index])
+                                count += 1
+                            except ValueError:
+
+                                continue
+
+
+
+                        try:
+                            sum2 += float(infor[index])
+                            count2 += 1
+
+                        except ValueError:
+
+
+                            continue
+
+
+                if (sum2 != 0):
+                    if (count2 == 0):
+                        count2 = 1
+                    result[index] = str(sum2 / count2)
+
+                if (sum != 0):
+                    if (count == 0):
+                        count = 1
+                    result[index] = str(sum / count)
+
+
+
+
+                if(result[index]==''):
+                    missdata += 1
+                    continue
+                processdata +=1
+
+
+
+
+        copy_weather_data_year_season_same.append(result)
+    out_put_new(output, 'temporary table', copy_weather_data_year_season_same)
+    print("finish copy_weather_data_year_season_same !!")
+    return str(missdata)+' | '+str(processdata)
+
+
+
+
+
 
 
 
@@ -382,8 +576,15 @@ def main():
     #     find_Station_With_Data('Weather data/OUTPUT_ontario_2_2_ottawa_' + str(i) + '.csv')
     # out_put_new('hasData','temporary table',station_has_data)
     # separate_data()
+
     # copy_weather_data_complete_same_method()
-    print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
+
+    # print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
+
+    input = '2008_process'
+    output= '2008_finish'
+
+    print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
 
     end = time.time()
     hours, rem = divmod(end - start, 3600)
