@@ -1,10 +1,13 @@
 import csv
 
+from AccidentLookupTableGeneration import lookup_table_generation
 from AccidentLookupTablePreprocessor import collision_processor, remove_prefix, \
     output_collision_data_from_list_to_new_csv
 from Collision import Collision
 from FactTableStagingP1 import data_staging_phase_one
 from FactTableStagingP2 import data_staging_phase_two
+from OttawaAccidentHourTableUnbucketize import unbucketizeHourTable
+from OttawaAccidentLocationUnbucketize import unbucketizeLocationTable
 
 
 def process_collision_table():
@@ -76,17 +79,35 @@ def process_collision_table():
     list.extend(collisions)
     output_collision_data_from_list_to_new_csv("Collision_Table", list)
 
-
+print("##### Prefiltering Weather Data #####")
 # prefilteringWeatherData()
+print("##### Finished prefiltering #####")
+print("##### Processing collision table #####")
 
-# process_collision_table()
+process_collision_table()
 
-# unbucketizeHourTable("Collision_Table.csv", "Hour_Table")
-# #
-# unbucketizeLocationTable("Collision_Table.csv", "Location_Table")
-#
-# lookup_table_generation("Collision_Table.csv", "Hour_Table.csv", "Location_Table.csv", "LOOKUP_TABLE")
+print("##### Finished processing collision table #####")
+print("##### Unbucketizing Hour table #####")
+
+unbucketizeHourTable("Collision_Table.csv", "Hour_Table")
+
+print("##### Finished unbucketizing hour table #####")
+print("##### Unbucketizing Location table #####")
+
+unbucketizeLocationTable("Collision_Table.csv", "Location_Table")
+
+print("##### Finished unbucketizing location table #####")
+print("##### Generating look_up table for FACT #####")
+
+lookup_table_generation("Collision_Table.csv", "Hour_Table.csv", "Location_Table.csv", "LOOKUP_TABLE")
+
+print("##### Staging 1 #####")
 
 data_staging_phase_one("LOOKUP_TABLE.csv", "Hour_Table.csv", "Staging_1_Main", "Final_Hour")
-#
+
+print("##### Finished Staging 1 #####")
+print("##### Staging 2 #####")
+
 data_staging_phase_two("Staging_1_Main.csv", "Location_Table.csv", "Staging_2_Main", "Final_Location")
+
+print("##### Finished Staging 2 #####")
