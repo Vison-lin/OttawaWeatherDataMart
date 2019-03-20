@@ -6,6 +6,7 @@ from AccidentLookupTablePreprocessor import collision_processor, remove_prefix, 
 from Collision import Collision
 from FactTableStagingP1 import data_staging_phase_one
 from FactTableStagingP2 import data_staging_phase_two
+from FactTableStagingP3 import data_staging_phase_three
 from OttawaAccidentHourTableUnbucketize import unbucketizeHourTable
 from OttawaAccidentLocationUnbucketize import unbucketizeLocationTable
 
@@ -84,30 +85,36 @@ print("##### Prefiltering Weather Data #####")
 print("##### Finished prefiltering #####")
 print("##### Processing collision table #####")
 
-process_collision_table()
+# process_collision_table()
 
 print("##### Finished processing collision table #####")
 print("##### Unbucketizing Hour table #####")
 
-unbucketizeHourTable("Collision_Table.csv", "Hour_Table")
+# unbucketizeHourTable("Collision_Table.csv", "Hour_Table")
 
 print("##### Finished unbucketizing hour table #####")
 print("##### Unbucketizing Location table #####")
 
-unbucketizeLocationTable("Collision_Table.csv", "Location_Table")
+# unbucketizeLocationTable("Collision_Table.csv", "Location_Table")
 
 print("##### Finished unbucketizing location table #####")
 print("##### Generating look_up table for FACT #####")
 
-lookup_table_generation("Collision_Table.csv", "Hour_Table.csv", "Location_Table.csv", "LOOKUP_TABLE")
+# lookup_table_generation("Collision_Table.csv", "Hour_Table.csv", "Location_Table.csv", "LOOKUP_TABLE")
 
 print("##### Staging 1 #####")
 
-data_staging_phase_one("LOOKUP_TABLE.csv", "Hour_Table.csv", "Staging_1_Main", "Final_Hour")
+# data_staging_phase_one("LOOKUP_TABLE.csv", "Hour_Table.csv", "Staging_1_Main", "Final_Hour")
 
 print("##### Finished Staging 1 #####")
 print("##### Staging 2 #####")
 
-data_staging_phase_two("Staging_1_Main.csv", "Location_Table.csv", "Staging_2_Main", "Final_Location")
+# data_staging_phase_two("Staging_1_Main.csv", "Location_Table.csv", "Staging_2_Main", "Final_Location")
 
 print("##### Finished Staging 2 #####")
+print("##### Staging 3 #####")
+
+data_staging_phase_three("Staging_2_Main.csv", "weather_data_final_finish.csv", "Staging_3_Main",
+                       "Final_Weather")
+
+print("##### Finished Staging 3 #####")

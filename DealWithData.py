@@ -411,9 +411,6 @@ def copy_weather_data_year_season_same_method(input,output):
     for s in total_data:
 
         a += 1
-        if a==100000:
-            break
-
         end = time.time()
         hours, rem = divmod(end - start, 3600)
         minutes, seconds = divmod(rem, 60)
@@ -581,8 +578,8 @@ def main():
 
     # print("Finally, missing data|processing data : "+copy_weather_data_season_same_method())
 
-    input = '2008_process'
-    output= '2008_finish'
+    input = '2010'
+    output= '2010_finish'
 
     print("Finally, missing data|processing data : " + copy_weather_data_year_season_same_method(input,output))
 
