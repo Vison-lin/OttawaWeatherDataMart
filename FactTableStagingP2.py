@@ -55,6 +55,10 @@ def generate_surrogate_key_and_remove_duplicate():
     key_ctr = -1
     print("Start to remove duplicate in hour dim table")
     for location in locations:
+        if location.intersection_one == "":
+            location.intersection_one = "N/A"
+        if location.intersection_two == "":
+            location.intersection_two = "N/A"
         curr_value = location.location_id
         if prev_value != curr_value:  # if not the same
             prev_value = curr_value
@@ -71,7 +75,6 @@ def generate_surrogate_key_and_remove_duplicate():
                 collision.location = location.closest_weather_station  # temp use collision location to store closest weather station
                 if location.intersection_one == "N/A" and location.intersection_two == "N/A":
                     collision.is_intersection = False
-                    print("#####"+location.street_name + "HAS NO INTERSECTION!!!")
                 else:
                     collision.is_intersection = True
     print("Finished processing collision table")
