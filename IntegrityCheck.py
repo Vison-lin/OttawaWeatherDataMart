@@ -77,6 +77,13 @@ def deleteBlankColumn(filename):
     final_data = []
     result = []
     for s in weather_table:
+        continueCheck = True
+        for c in final_collision:
+            if int(c[3]) == int(s[1]):
+                continueCheck = False
+                break
+        if continueCheck:
+            continue
         result = s
         for i in s[:-1]:
             if i == '':
@@ -112,8 +119,9 @@ def deleteBlankColumn(filename):
 #     weather_surface.sort()
 #     out_put_new('Weather_Surface','Determine',weather_surface)
 
+final_collision = []
 def determine(filename):
-    final_data = []
+
     result = []
     for c in collision_table[1:]:
         result = c
@@ -125,9 +133,9 @@ def determine(filename):
             else:
                 result[5] = w[24]
 
-        final_data.append(result)
+        final_collision.append(result)
 
-    out_put_new(filename, final_data)
+    out_put_new(filename, final_collision)
     print("determine() finish!!!")
 
 
