@@ -687,7 +687,7 @@ def out_put_new(filename,list_data):
 
 
 
-def main(input,output):
+def deal_with_weather_data(input, output):
     start = time.time()
     find_Ontario_Station()
 
