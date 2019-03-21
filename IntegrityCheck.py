@@ -1,4 +1,5 @@
 import csv
+import sys
 
 
 def out_put_new(filename, list_data):
@@ -76,10 +77,16 @@ def deleteBlankColumn(filename):
 
     final_data = []
     result = []
-    for s in weather_table:
+    ctr = 1
+    l = len(weather_table[1:])
+    for s in weather_table[1:]:
+        sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " records have been processed!")
+        sys.stdout.flush()
+        ctr = ctr + 1
         continueCheck = True
         for c in final_collision:
-            if int(c[3]) == int(s[1]):
+            # print(s)
+            if int(c[3]) == int(s[0]):
                 continueCheck = False
                 break
         if continueCheck:
@@ -142,7 +149,9 @@ def determine(filename):
 def integrity_check(collisioinName, weatherName, outputCollisionName, outputWeatherNaeme):
     read_data(collisioinName, weatherName)
     determine(outputCollisionName)
+    print("Dtermine finished")
     translate_CtoW()
+    print("Translate CTOW finished")
     deleteBlankColumn(outputWeatherNaeme)
 
 
