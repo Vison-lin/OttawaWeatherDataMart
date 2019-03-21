@@ -51,26 +51,53 @@ def stagingP5_create_accident_table(filename,output):
 
 
 
-def stagingP5_create_fact_table(filename,output):
+# def stagingP5_create_fact_table(filename,output):
+#     csvfile = open(filename + '.csv', 'r')
+#     collision_table = csv.reader(csvfile)
+#     final_table = []
+#     title =["Accident-key", "Location-key", "Hour-key", "Weather-key", "Event-key",
+#                          "IMPACT_TYPE","IS_INTERSECTION"]
+#     final_table.append(title)
+#     count = 0
+#     for c in collision_table:
+#         result = []
+#         if c[0] in collision_id:
+#             result.append(count)
+#             count+=1
+#             for index in range(1,14):#todo fred change to 15
+#                 if index in need_index:
+#                     result.append(c[index])
+#             final_table.append(result)
+#
+#     out_put_new(output,final_table)
+#     print("stagingP5_create_fact_table finish!!!")
+
+def stagingP5_check_fatal(filename, output):
     csvfile = open(filename + '.csv', 'r')
     collision_table = csv.reader(csvfile)
     final_table = []
-    title =["Accident-key", "Location-key", "Hour-key", "Weather-key", "Event-key",
-                         "IMPACT_TYPE","IS_INTERSECTION"]
+    title = ["Accident-key", "Location-key", "Hour-key", "Weather-key", "Event-key",
+             "IS_FATAL", "IS_INTERSECTION"]
     final_table.append(title)
     count = 0
     for c in collision_table:
         result = []
         if c[0] in collision_id:
             result.append(count)
-            count+=1
-            for index in range(1,14):#todo fred change to 15
+            count += 1
+            for index in range(1, 15):
                 if index in need_index:
+                    if index == 10:
+                        check = False
+                        if c[index] == 'Fatal injury':
+                            check = True
+                        result.append(check)
+                        continue
                     result.append(c[index])
             final_table.append(result)
 
-    out_put_new(output,final_table)
-    print("stagingP5_create_fact_table finish!!!")
+    out_put_new(output, final_table)
+    print("stagingP5_check_fatal finish!!!")
 
 
 
@@ -85,7 +112,7 @@ def out_put_new(filename,list_data):
 def data_staging_phase_five(input, outputAccident,outputFact):
     stagingP5_check_duplicate(input)
     stagingP5_create_accident_table(input, outputAccident)
-    stagingP5_create_fact_table(input,outputFact)
+    stagingP5_check_fatal(input,outputFact)
 
 
 
