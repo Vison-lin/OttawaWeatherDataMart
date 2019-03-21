@@ -168,7 +168,7 @@ def integrity_check(collisioinName, weatherName, outputCollisionName, outputWeat
     deleteBlankColumn(outputWeatherNaeme)
 
 
-integrity_check('Determine/Staging_4_Integrity_Checked','Determine/Final_Weather','1','2')
+# integrity_check('Determine/Staging_4_Integrity_Checked','Determine/Final_Weather','1','2')
 
 
 
