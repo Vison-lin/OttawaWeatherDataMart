@@ -70,9 +70,10 @@ def generate_surrogate_key_and_remove_duplicate():
                 collision.location_key = location.location_key  # replace the id with key
                 collision.location = location.closest_weather_station  # temp use collision location to store closest weather station
                 if location.intersection_one == "N/A" and location.intersection_two == "N/A":
-                    collision.is_intersection = True
-                else:
                     collision.is_intersection = False
+                    print("#####"+location.street_name + "HAS NO INTERSECTION!!!")
+                else:
+                    collision.is_intersection = True
     print("Finished processing collision table")
 
 
