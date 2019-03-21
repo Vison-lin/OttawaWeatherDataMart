@@ -31,6 +31,7 @@ def read_source_file(file_name, hour_file_name):
                 collision.no_of_pedestrians = row[11]
                 collision.date = row[12]
                 collision.location = row[13]
+                collision.is_intersection = row[14]
                 collisions.append(collision)
     readCollision.close()
 
@@ -97,13 +98,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
         writer = csv.writer(csvFile)
         writer.writerow(["COLLISION_ID", "LOCATION_ID", "HOUR_KEY", "WEATHER_KEY", "EVENT_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
-                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP"])
+                         "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP","IS_INTERSECTION"])
         for collision in collisions:
             writer.writerow([collision.collision_id, collision.location_key, collision.hour_key,
                              collision.weather_key, collision.event_key, collision.environment, collision.light,
                              collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
-                             collision.impace_type, collision.no_of_pedestrians, collision.date])
+                             collision.impace_type, collision.no_of_pedestrians, collision.date, collision.is_intersection])
     csvFile.close()
 
     with open(output_dim_table_name + ".csv", 'w', newline='') as csvFile:
