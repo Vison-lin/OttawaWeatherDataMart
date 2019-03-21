@@ -2,9 +2,9 @@ import csv
 
 
 
-delete_index = [1,2,3,4,12]
+delete_index = [1,2,3,4,12,14]
 
-need_index = [1,2,3,4,10]
+need_index = [1,2,3,4,10,14]
 
 
 collision_id =[]
@@ -41,7 +41,7 @@ def stagingP5_create_accident_table(filename,output):
         if c[0] in collision_id:
             result.append(count)
             count+=1
-            for index in range(1,14):
+            for index in range(1,15):
                 if index not in delete_index:
                     result.append(c[index])
             final_table.append(result)
@@ -56,7 +56,7 @@ def stagingP5_create_fact_table(filename,output):
     collision_table = csv.reader(csvfile)
     final_table = []
     title =["Accident-key", "Location-key", "Hour-key", "Weather-key", "Event-key",
-                         "IMPACT_TYPE"]
+                         "IMPACT_TYPE","IS_INTERSECTION"]
     final_table.append(title)
     count = 0
     for c in collision_table:
@@ -64,7 +64,7 @@ def stagingP5_create_fact_table(filename,output):
         if c[0] in collision_id:
             result.append(count)
             count+=1
-            for index in range(1,14):
+            for index in range(1,15):
                 if index in need_index:
                     result.append(c[index])
             final_table.append(result)
