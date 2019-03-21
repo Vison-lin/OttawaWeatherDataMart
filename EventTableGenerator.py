@@ -56,7 +56,7 @@ def event_generator():
                   ['Winterlude 2014', '2014-1-31', '2014-2-17'],
                   ['Winterlude 2015', '2015-1-30', '2015-2-16'],
                   ['Winterlude 2016', '2016-1-29', '2016-2-15'],
-                  ['Winterlude 2017', '2017-1-30', '2014-2-20'],
+                  ['Winterlude 2017', '2017-1-30', '2017-2-20'],
                 ]
     count_id = 4
     for e in event_list:

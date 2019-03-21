@@ -51,9 +51,6 @@ def read_source_file(file_name, hour_file_name):
                 if int(event.event_start_date.split("-")[1]) > int(event.event_end_date.split("-")[1]):
                     raise Exception("Wrong event time - event starting date must be earlier than event ending date: "
                                     "START:" + event.event_start_date + " compare to END:" + event.event_end_date)
-                if int(event.event_start_date.split("-")[2]) > int(event.event_end_date.split("-")[2]):
-                    raise Exception("Wrong event time - event starting date must be earlier than event ending date: "
-                                    "START:" + event.event_start_date + " compare to END:" + event.event_end_date)
                 events.append(event)
     readHour.close()
 

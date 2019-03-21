@@ -12,3 +12,4 @@ class Hour:
         self.holiday = False
         self.holiday_name = ""
         self.hour_id = ""
+        self.weekday = ""

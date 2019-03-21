@@ -91,8 +91,6 @@ def deleteBlankColumn(filename):
     ctr = 1
     l = len(weather_table[1:])
     for s in weather_table[1:]:
-        if ctr==10000:
-            break
         sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " records have been processed!")
         sys.stdout.flush()
         ctr = ctr + 1
