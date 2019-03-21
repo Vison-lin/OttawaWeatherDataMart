@@ -21,6 +21,55 @@ def event_generator():
     event1.event_end_date = "2015-2-3"
     events.append(event1)
 
+    event2 = Event()
+    event2.event_id = 2
+    event2.event_name = "2016 Tim Hortons NHL Heritage Classic"
+    event2.event_start_date = "2016-10-23"
+    event2.event_end_date = "2016-10-23"
+    events.append(event2)
+
+    event3 = Event()
+    event3.event_id = 3
+    event3.event_name = "NHL 100"
+    event3.event_start_date = "2017-1-1"
+    event3.event_end_date = "2017-1-1"
+    events.append(event3)
+
+    event4 = Event()
+    event4.event_id = 4
+    event4.event_name = "Scotiabank NHL Centennial Classic"
+    event4.event_start_date = "2017-1-1"
+    event4.event_end_date = "2017-1-1"
+    events.append(event4)
+
+
+
+
+
+    event_list = [['Scotiabank NHL Centennial Classic','2017-1-1','2017-1-1'],
+                  ['Bridgestone NHL Winter Classic','2017-1-2','2017-1-2'],
+                  ['Honda NHL All-Star Weekend', '2017-1-28', '2017-1-29'],
+                  ['Hockey is for Everyone Month', '2017-2-2', '2017-2-2'],
+                  ['2017 Coors Light NHL Stadium Series', '2017-2-25', '2017-2-25'],
+                  ['2017 NHL Expansion Draft', '2017-7-21', '2017-7-21'],
+                  ['2017 NHL Draft', '2017-6-23', '2017-6-24'],
+                  ['Winterlude 2014', '2014-1-31', '2014-2-17'],
+                  ['Winterlude 2015', '2015-1-30', '2015-2-16'],
+                  ['Winterlude 2016', '2016-1-29', '2016-2-15'],
+                  ['Winterlude 2017', '2017-1-30', '2014-2-20'],
+                ]
+    count_id = 4
+    for e in event_list:
+        event = Event();
+        event.event_id = count_id
+        count_id+=1
+        event.event_name = e[0]
+        event.event_start_date = e[1]
+        event.event_end_date = e[2]
+        events.append(event)
+
+
+
     return events
 
 
