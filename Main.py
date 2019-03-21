@@ -4,6 +4,7 @@ from AccidentLookupTableGeneration import lookup_table_generation
 from AccidentLookupTablePreprocessor import collision_processor, remove_prefix, \
     output_collision_data_from_list_to_new_csv
 from Collision import Collision
+from DealWithData import deal_with_weather_data
 from EventTableGenerator import generate_event_table
 from FactTableStagingP1 import data_staging_phase_one
 from FactTableStagingP2 import data_staging_phase_two
@@ -114,28 +115,31 @@ print("##### Staging 1 #####")
 print("##### Finished Staging 1 #####")
 print("##### Staging 2 #####")
 
-# data_staging_phase_two("Staging_1_Main.csv", "Location_Table.csv", "Staging_2_Main", "Final_Location")
+data_staging_phase_two("Staging_1_Main.csv", "Location_Table.csv", "Staging_2_Main", "Final_Location")
 
 print("##### Finished Staging 2 #####")
+
+deal_with_weather_data("Ontario_WEATHER_ottawa", "weather_data_final_finish.csv")
+
 print("##### Staging 3 #####")
 
-# data_staging_phase_three("Staging_2_Main.csv", "weather_data_final_finish.csv", "Staging_3_Main",
-#                          "Weather_Table")  # todo weather_data_final_finish.csv?
+data_staging_phase_three("Staging_2_Main.csv", "weather_data_final_finish.csv", "Staging_3_Main",
+                         "Weather_Table")
 
 print("##### Finished Staging 3 #####")
 print("##### Generating Event table #####")
 
-# generate_event_table("Event_table")
+generate_event_table("Event_table")
 
 print("##### Finished generating Event table #####")
 print("##### Staging 4 #####")
 
-# data_staging_phase_four("Staging_3_Main.csv", "Event_table.csv", "Staging_4_Main", "Final_Event")
+data_staging_phase_four("Staging_3_Main.csv", "Event_table.csv", "Staging_4_Main", "Final_Event")
 
 print("##### Finished Staging 4 #####")
 
 integrity_check("Staging_4_Main", "Weather_Table", "Staging_4_Integrity_Checked", "Final_Weather")
 
-data_staging_phase_five("Staging_4_Integrity_Checked", "Accident_table")
+data_staging_phase_five("Staging_4_Integrity_Checked", "Accident_table", "Staging_5_Main")
 
-data_staging_phase_six("Staging_4_Integrity_Checked", "Staging_6_Main")
+data_staging_phase_six("Staging_5_Main", "Fact_Table")

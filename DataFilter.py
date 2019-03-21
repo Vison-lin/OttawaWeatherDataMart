@@ -16,7 +16,7 @@ def generate_weather_station_list():
         for line in lines:
             if ("OTTAWA" in line[0] or "RIDEAU" in line[0]) and "ONTARIO" in line[1]:
                 # if is in Ontario and the station name contains OTTAWA or RIDEAU
-                if "NOTTAWASAGA ISLAND" != line[0]:  # exclude the exception todo testing!
+                if "NOTTAWASAGA ISLAND" != line[0]:  # exclude the exception
                     ottawaWeatherStationList.append(line)
     readStations.close()
     print("Finished station reading.")
