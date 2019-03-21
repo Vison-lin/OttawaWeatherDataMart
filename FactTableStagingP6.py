@@ -57,10 +57,7 @@ def out_put_new(filename,list_data):
     writer.writerows(list_data)
     csvfile.close()
 
-def main():
-    stagingP6_check_duplicate('Determine/Staging_4_Integrity_Checked')
-    stagingP6_create_table('Determine/Staging_4_Integrity_Checked','Determine/Fact table')
-
-
-main()
+def data_staging_phase_six(input, output):
+    stagingP6_check_duplicate(input)
+    stagingP6_create_table(input, output)
 

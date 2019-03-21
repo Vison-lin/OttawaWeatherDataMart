@@ -36,7 +36,7 @@ def read_source_file(file_name, locoation_file_name):
         print("Start to read file: " + locoation_file_name + ". This may take a while...")
         file = csv.reader(readLocation)
         for row in file:
-            if "HOUR_ID" not in row[0]:
+            if "LOCATION_ID" not in row[0]:
                 location = Location()
                 location.location_id = row[0]
                 location.street_name = row[1]
@@ -69,6 +69,10 @@ def generate_surrogate_key_and_remove_duplicate():
             if collision.location_id == location.location_id:
                 collision.location_key = location.location_key  # replace the id with key
                 collision.location = location.closest_weather_station  # temp use collision location to store closest weather station
+                if location.intersection_one == "N/A" and location.intersection_two == "N/A":
+                    collision.is_intersection = True
+                else:
+                    collision.is_intersection = False
     print("Finished processing collision table")
 
 
@@ -83,13 +87,13 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
         writer.writerow(["COLLISION_ID", "LOCATION_KEY", "HOUR_KEY", "ENVIRONMENT",
                          "LIGHT", "SURFACE_CONDITION", "TRAFFIC_CONTROL", "TRAFFIC_CONTROL_CONDITION",
                          "COLLISION_CLASSIFICATION", "IMPACT_TYPE", "NO_OF_PEDESTRIANS", "TIME_STAMP",
-                         "WEATHER_STATION_STAMP"])
+                         "WEATHER_STATION_STAMP", "IS_INTERSECTION"])
         for collision in collisions:
             writer.writerow([collision.collision_id, collision.location_key, collision.hour_key,
                              collision.environment, collision.light,
                              collision.surface_condition, collision.traffic_control,
                              collision.traffic_control_condition, collision.collision_classification,
-                             collision.impace_type, collision.no_of_pedestrians, collision.date, collision.location])
+                             collision.impace_type, collision.no_of_pedestrians, collision.date, collision.location, collision.is_intersection])
     csvFile.close()
 
     with open(output_dim_table_name + ".csv", 'w', newline='') as dimCsvFile:

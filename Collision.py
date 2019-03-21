@@ -20,3 +20,4 @@ class Collision:
         self.hour_key = ""
         self.weather_key = ""
         self.event_key = ""
+        self.is_intersection = ""

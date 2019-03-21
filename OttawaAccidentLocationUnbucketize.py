@@ -29,7 +29,7 @@ def location_string_processor(file_name):
                 sys.stdout.flush()
                 location_str = row[1]
                 is_at = False
-                is_btwn = False;
+                is_btwn = False
                 if "@" in location_str:
                     is_at = True
                 if "btwn" in location_str:
@@ -41,32 +41,82 @@ def location_string_processor(file_name):
                     substring = location_str.split("@", 1)
                     location.street_name = substring[0]
                     substring = substring[1]
-                    if "@" in substring:
-                        raise Exception("Contains more than one @ in location string: " + location_str)
-                    substring = substring.split("/", 1)
-                    if len(substring) == 2:
-                        location.intersection_one = substring[0]
-                        location.intersection_two = substring[1]
-                    elif len(substring) == 1:
-                        location.intersection_one = substring[0]
-                        location.intersection_two = "N/A"
-                    else:
-                        raise Exception("Wrong format location address: " + location_str)
-                if is_btwn:
+                    if "&" in substring:
+                        substring = substring.split("&", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "/" in substring:
+                        substring = substring.split("/", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "@" in substring or "btwn" in substring:
+                        raise Exception("Wrong location format " + location_str)
+
+
+                elif is_btwn:
                     substring = location_str.split("btwn", 1)
                     location.street_name = substring[0]
                     substring = substring[1]
-                    if "@" in substring:
-                        raise Exception("Contains more than one btwn in location string: " + location_str)
-                    substring = substring.split("&", 1)
-                    if len(substring) == 2:
-                        location.intersection_one = substring[0]
-                        location.intersection_two = substring[1]
-                    elif len(substring) == 1:
-                        location.intersection_one = substring[0]
-                        location.intersection_two = "N/A"
-                    else:
-                        raise Exception("Wrong format location address: " + location_str)
+                    if "&" in substring:
+                        substring = substring.split("&", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "/" in substring:
+                        substring = substring.split("/", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "@" in substring or "btwn" in substring:
+                        raise Exception("Wrong location format " + location_str)
+                else:
+                    substring = location_str.split("/", 1)
+                    location.street_name = substring[0]
+                    substring = substring[1]
+                    if "&" in substring:
+                        substring = substring.split("&", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "/" in substring:
+                        substring = substring.split("/", 1)
+                        if len(substring) == 2:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = substring[1]
+                        elif len(substring) == 1:
+                            location.intersection_one = substring[0]
+                            location.intersection_two = "N/A"
+                        else:
+                            raise Exception("Wrong format location address: " + location_str)
+                    if "@" in substring or "btwn" in substring:
+                        raise Exception("Wrong location format " + location_str)
                 location.longitude = row[2]
                 if ((int(float(location.longitude)) != -75) and (int(float(location.longitude)) != -76)):
                     raise Exception("Wrong longitude: [" + location.longitude + "], " + row[2])

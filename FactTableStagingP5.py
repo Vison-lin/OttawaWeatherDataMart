@@ -58,10 +58,10 @@ def out_put_new(filename,list_data):
     writer.writerows(list_data)
     csvfile.close()
 
-def main():
-    stagingP5_check_duplicate('Determine/Staging_4_Integrity_Checked')
-    stagingP5_create_table('Determine/Staging_4_Integrity_Checked','Determine/Accident table')
+def data_staging_phase_five(input, output):
+    stagingP5_check_duplicate(input)
+    stagingP5_create_table(input, output)
 
 
-main()
+
 

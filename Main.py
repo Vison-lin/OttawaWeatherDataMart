@@ -9,6 +9,7 @@ from FactTableStagingP1 import data_staging_phase_one
 from FactTableStagingP2 import data_staging_phase_two
 from FactTableStagingP3 import data_staging_phase_three
 from FactTableStagingP4 import data_staging_phase_four
+from FactTableStagingP5 import data_staging_phase_five
 from IntegrityCheck import integrity_check
 from OttawaAccidentHourTableUnbucketize import unbucketizeHourTable
 from OttawaAccidentLocationUnbucketize import unbucketizeLocationTable
@@ -133,3 +134,5 @@ print("##### Staging 4 #####")
 print("##### Finished Staging 4 #####")
 
 integrity_check("Staging_4_Main", "Weather_Table", "Staging_4_Integrity_Checked", "Final_Weather")
+
+data_staging_phase_five("Staging_4_Integrity_Checked", "Staging_5_Main", "Final")
