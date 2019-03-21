@@ -64,13 +64,30 @@ def read_data(collisionName,weatherName):
 #     result = 'Same:'+str(same)+'\n'+'Unknown_Weather: '+str(unknown_w)+'\n'+'Unknown_Collision: '+str(unknown_c)+'\n'+'Different: '+str(different)+'\n'
 #     return result
 
-def translate_CtoW(filename):
+def translate_CtoW():
+
     for c in collision_table[1:]:
         if(c[5]!='Unknown'):
             weather_table[int(c[3]) + 1][24]=c[5]
 
-    out_put_new(filename,weather_table)
-    print('translate_CtoW() finish!!!!')
+
+def deleteBlankColumn(filename):
+
+    final_data = []
+    result = []
+    for s in weather_table:
+        result = s
+        for i in s[:-1]:
+            if i == '':
+                continue
+            result.append(i)
+        final_data.append(result)
+    out_put_new(filename,final_data)
+    print('deleteBlankColumn() finish!!!')
+
+
+
+
 
 
 # def weather_surface():
@@ -125,7 +142,10 @@ def determine(filename):
 def IntegrityCheck(collisioinName,weatherName,outputCollisionName,outputWeatherNaeme):
     read_data(collisioinName,weatherName)
     determine(outputCollisionName)
-    translate_CtoW(outputWeatherNaeme)
+    translate_CtoW()
+    deleteBlankColumn(outputWeatherNaeme)
+
+
 
 
 
