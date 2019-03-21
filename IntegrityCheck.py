@@ -74,12 +74,25 @@ def translate_CtoW():
 
 
 def deleteBlankColumn(filename):
-
+    deleteIndex = [7,9,11,13,15,17,19,20,21,23]
     final_data = []
-    result = []
+    title = []
+    title_data =["WEATHER_ID", "DATE", "YEAR", "MONTH", "DAY", "TIME", "TEMPERATURE_C", "TEMPERATURE_FLAG",
+                                                                                                "DEW_POINT_TEMP_C",
+                         "DEW_POINT_TEMP_FLAG", "REL_HUM", "REL_HUM_FLAG", "WIND_DIR",
+                         "WIND_DIR_FLAG", "WIND_SPEED", "WIND_SPEED_FLAG", "VISIBILITY", "VISIBILITY_FLAG",
+                         "STN_PRESS_KPA", "STN.PRESS.FLAG", "HMDX", "HMDX_FLAG", "WIND_CHILL", "WIND_CHILL_FLAG",
+                         "WEATHER", "STATION_NAME", "STATION_PROVINCE",'SEASON']
+    print(len(title_data))
+    for i in range(28):
+        if i not in deleteIndex:
+            title.append(title_data[i])
+    final_data.append(title)
     ctr = 1
     l = len(weather_table[1:])
     for s in weather_table[1:]:
+        if ctr==10000:
+            break
         sys.stdout.write("\r" + str(ctr) + "/" + str(l) + " records have been processed!")
         sys.stdout.flush()
         ctr = ctr + 1
@@ -91,11 +104,11 @@ def deleteBlankColumn(filename):
                 break
         if continueCheck:
             continue
-        result = s
-        for i in s[:-1]:
-            if i == '':
+        result = []
+        for i in range(28):
+            if i in deleteIndex:
                 continue
-            result.append(i)
+            result.append(s[i])
         final_data.append(result)
     out_put_new(filename,final_data)
     print('deleteBlankColumn() finish!!!')
@@ -155,7 +168,7 @@ def integrity_check(collisioinName, weatherName, outputCollisionName, outputWeat
     deleteBlankColumn(outputWeatherNaeme)
 
 
-
+integrity_check('Determine/Staging_4_Integrity_Checked','Determine/Final_Weather','1','2')
 
 
 

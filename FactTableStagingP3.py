@@ -134,7 +134,7 @@ def output_collision_data_from_list_to_new_csv(file_name, output_dim_table_name)
     with open(output_dim_table_name + ".csv", 'w', newline='') as dimCsvFile:
         print("Prepare to write the data into the file: " + output_dim_table_name + ". It might take a while...")
         writer = csv.writer(dimCsvFile)
-        writer.writerow(["WEATHER_ID", "DATE", "YEAR", "MONTH", "DAY", "TIME", "TEMPERATURE_C", "TEMPERATURE_FLAG"
+        writer.writerow(["WEATHER_ID", "DATE", "YEAR", "MONTH", "DAY", "TIME", "TEMPERATURE_C", "TEMPERATURE_FLAG",
                                                                                                 "DEW_POINT_TEMP_C",
                          "DEW_POINT_TEMP_FLAG", "REL_HUM", "REL_HUM_FLAG", "WIND_DIR",
                          "WIND_DIR_FLAG", "WIND_SPEED", "WIND_SPEED_FLAG", "VISIBILITY", "VISIBILITY_FLAG",
